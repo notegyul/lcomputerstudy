@@ -1,6 +1,7 @@
 package com.lcomputer.mymvc.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.lcomputer.mymvc.service.UserService;
 import com.lcomputer.mymvc.vo.User;
+import com.lcomputer.mymvc.dao.UserDAO;
 
 @WebServlet("*.test")
 public class Controller extends HttpServlet {
@@ -45,6 +47,21 @@ public class Controller extends HttpServlet {
 				userService.insertUser(user);
 				
 				view = "myuser/insert-result";
+				break;
+			case "/user-list.test":
+				userService = UserService.getInstance();
+				ArrayList<User> list = userService.getUsers();
+				view = "myuser/list";
+				req.setAttribute("list", list);
+				break;
+			case "/user-detail.test":
+				userService = UserService.getInstance();
+				user = userService.getUser();
+				user.setU_idx(rs.getString("u_idx"));  //--> DAO나 UserService에서 파라미터 얻어오는 메서드 생성? ##
+				view = "myuser/user-detail";
+				req.setAttribute("user", user);
+				break;
+				
 		}
 		
 		RequestDispatcher rd = req.getRequestDispatcher(view+".jsp");

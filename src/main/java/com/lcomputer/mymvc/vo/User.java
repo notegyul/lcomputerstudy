@@ -44,5 +44,9 @@ public class User {
 	public String getU_age() {
 		return u_age;
 	}
+	public static User getUser() {
+		User user = new User();
+		return user;
+	}
 	
 }

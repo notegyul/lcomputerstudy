@@ -30,7 +30,8 @@ public class UserDAO {
 		
 		try {
 			conn = DB_Connection.getConnection();
-			String sql = "insert into mytest(user_id,user_pw,user_name,user_tel,user_age) values(?,?,?,?,?)";
+			String sql = "insert into user(u_id,u_pw,u_name,u_tel,u_age) values(?,?,?,?,?)";
+			//insert into mytest -> user(user_~ --> u_~~) #####
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, user.getU_id());
 			pstmt.setString(2, user.getU_pw());
@@ -58,22 +59,61 @@ public class UserDAO {
 		
 		try {
 			conn = DB_Connection.getConnection();
-			String query = "select * from mytest";
+			String query = "select * from user";		//from mytest -> user(mysql 테이블 변경 필요)
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();
 			
 			while(rs.next()) {
 				User user = new User();
-				user.setU_idx(rs.getInt("user_idx"));
-				user.setU_id(rs.getString("user_id"));
-				user.setU_name(rs.getString("user_name"));
-				user.setU_tel(rs.getString("user_tel"));
-				user.setU_age(rs.getString("user_age"));
+				user.setU_idx(rs.getInt("u_idx"));
+				user.setU_id(rs.getString("u_id"));
+				user.setU_name(rs.getString("u_name"));
+				user.setU_tel(rs.getString("u_tel"));
+				user.setU_age(rs.getString("u_age"));
 				list.add(user);
 			}
 			
 		}catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				//rs.close();
+				pstmt.close();
+				conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+		
+	}
+	
+	public User getUserInfo(User paramUser) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		User user = new User();
+		
+		try {
+			conn = DB_Connection.getConnection();
+			String sql = "select * from user where u_idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, paramUser.getU_idx());
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				
+				user.setU_idx(rs.getInt("u_idx"));
+				user.setU_id(rs.getString("u_id"));
+				user.setU_name(rs.getString("name"));
+				user.setU_tel(rs.getString("u_tel"));
+				user.setU_age(rs.getString("age"));
+			}
+			
+		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -85,8 +125,8 @@ public class UserDAO {
 			}
 		}
 		
-		return list;
 		
+		return user;
 	}
 	
 	
