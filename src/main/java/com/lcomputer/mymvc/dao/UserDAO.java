@@ -31,7 +31,7 @@ public class UserDAO {
 		try {
 			conn = DB_Connection.getConnection();
 			String sql = "insert into user(u_id,u_pw,u_name,u_tel,u_age) values(?,?,?,?,?)";
-			//insert into mytest -> user(user_~ --> u_~~) #####
+			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, user.getU_id());
 			pstmt.setString(2, user.getU_pw());
@@ -78,7 +78,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				//rs.close();
+				rs.close();
 				pstmt.close();
 				conn.close();
 			} catch(SQLException e) {
@@ -89,28 +89,28 @@ public class UserDAO {
 		return list;
 		
 	}
-	
-	public User getUserInfo(User paramUser) {
+	/*
+	public User getUserInfo(User user) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		User user = new User();
+		
 		
 		try {
 			conn = DB_Connection.getConnection();
 			String sql = "select * from user where u_idx=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, paramUser.getU_idx());
-			
+			pstmt.setInt(1, user.getU_idx());
 			rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
 				
 				user.setU_idx(rs.getInt("u_idx"));
 				user.setU_id(rs.getString("u_id"));
-				user.setU_name(rs.getString("name"));
+				user.setU_name(rs.getString("u_name"));
 				user.setU_tel(rs.getString("u_tel"));
-				user.setU_age(rs.getString("age"));
+				user.setU_age(rs.getString("u_age"));
+				
 			}
 			
 		} catch(Exception e) {
@@ -128,6 +128,47 @@ public class UserDAO {
 		
 		return user;
 	}
+	*/
+	
+	public User getUserInfo(int idx) {
+		User user = new User();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from user where u_idx=?";
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				user.setU_idx(rs.getInt("u_idx"));
+				user.setU_id(rs.getString("u_id"));
+				user.setU_pw(rs.getString("u_pw"));
+				user.setU_name(rs.getString("u_name"));
+				user.setU_tel(rs.getString("u_tel"));
+				user.setU_age(rs.getString("u_age"));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rs.close();
+				pstmt.close();
+				conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return user;
+		
+	}
+	
+	
+	
 	
 	
 }
