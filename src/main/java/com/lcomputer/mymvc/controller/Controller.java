@@ -69,18 +69,14 @@ public class Controller extends HttpServlet {
 			    */
 				User user2 = null;
 				userService = UserService.getInstance();
-				user2 = userService.getUser(new User());
+				String num = req.getParameter("u_idx");
+				user2 = userService.getUser(Integer.parseInt(num));
 				view = "myuser/user-detail";
 				req.setAttribute("user", user2);
 				break;
 				
 				
 				
-				/*
-				------------------
-				if(user == null) 
-					user = users.get(num);
-				------------------
 				/*
 				user = userService.getUser();
 				String no = req.getParameter("u_idx");

@@ -32,8 +32,8 @@ public class UserService {
 		return dao.getUsers();
 	}
 	
-	public User getUser(User user) {
-		return dao.getUserInfo(user.getU_idx());
+	public User getUser(int num) {
+		return dao.getUserInfo(num);
 	}
 	
 	
