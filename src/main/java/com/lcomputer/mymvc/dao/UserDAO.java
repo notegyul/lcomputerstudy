@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import com.lcomputer.mymvc.database.DB_Connection;
 import com.lcomputer.mymvc.vo.User;
 
@@ -165,6 +166,36 @@ public class UserDAO {
 		
 		return user;
 		
+	}
+	
+	public int getEditUser(User user) throws ClassNotFoundException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "update user set u_id=?, u_pw=?, u_name=?, u_tel=?, u_age=? where u_idx=?";
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,user.getU_id());
+			pstmt.setString(2, user.getU_pw());
+			pstmt.setString(3, user.getU_name());
+			pstmt.setString(4, user.getU_tel());
+			pstmt.setString(5, user.getU_age());
+			pstmt.setInt(6, user.getU_idx());
+			result = pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 	
 	

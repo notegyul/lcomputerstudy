@@ -58,7 +58,7 @@
 		</tr>
 		<tr style="heigth:50px;">
 			<td style="border:none;">
-				<a href="#" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">수정</a>
+				<a href="/user-edit.test" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">수정</a>
 			</td>
 			<td style="border:none;">
 				<a href="#" style="width:70%;font-weight:700;background-color:red;color:#fff;">삭제</a>
