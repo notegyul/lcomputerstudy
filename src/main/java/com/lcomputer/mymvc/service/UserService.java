@@ -36,6 +36,8 @@ public class UserService {
 		return dao.getUserInfo(num);
 	}
 	
-	
+	public int getEditUser(User user) {
+		return dao.editUser(user);
+	}
 	
 }

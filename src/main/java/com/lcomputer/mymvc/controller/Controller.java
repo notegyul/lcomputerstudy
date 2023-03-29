@@ -85,13 +85,32 @@ public class Controller extends HttpServlet {
 				userService = UserService.getInstance();
 				num = req.getParameter("u_idx");
 				user = userService.getUser(Integer.parseInt(num));
+				
 				view = "myuser/user-edit";
+				req.setAttribute("user", user);
 				break;
-			
-			case "/user-delete.test":
 				
+			case "/user-editProcess.test":
 				
+				userService = UserService.getInstance();
+				num = req.getParameter("u_idx");
+				user = userService.getUser(Integer.parseInt(num));
+				String id = req.getParameter("edit_id");
+				String pw = req.getParameter("edit_pw");
+				String name = req.getParameter("edit_name");
+				String tel = req.getParameter("edit_tel1") +"-"+req.getParameter("edit_tel2")+"-"+req.getParameter("edit_tel3");
+				String age = req.getParameter("edit_age");
+				user.setU_id(id);
+				user.setU_pw(pw);
+				user.setU_name(name);
+				user.setU_tel(tel);
+				user.setU_age(age);
 				
+				userService.getEditUser(user);	
+				view = "myuser/edit-complete";
+				req.setAttribute("user", user);
+				
+				break;
 			
 		}
 		
