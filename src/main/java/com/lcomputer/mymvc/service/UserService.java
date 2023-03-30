@@ -39,5 +39,8 @@ public class UserService {
 	public int getEditUser(User user) {
 		return dao.editUser(user);
 	}
+	public int deleteUser(User user) {
+		return dao.delete(user);
+	}
 	
 }

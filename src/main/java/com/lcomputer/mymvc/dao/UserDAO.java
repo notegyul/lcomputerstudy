@@ -200,6 +200,35 @@ public class UserDAO {
 		return result;
 	}
 	
+	public int delete(User user) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "delete from user where u_idx=?";
+		int result = 0;
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,user.getU_idx());
+			result = pstmt.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	
+	
+	
 	
 	
 	

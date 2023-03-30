@@ -7,6 +7,7 @@ public class User {
 	private String u_name;
 	private String u_tel;
 	private String u_age;
+	private String[] user_tel;
 	
 	public void setU_idx(int u_idx) {
 		this.u_idx = u_idx;
@@ -44,5 +45,17 @@ public class User {
 	public String getU_age() {
 		return u_age;
 	}
-	
+	public void setUser_tel(String[] user_tel) {
+		this.user_tel = user_tel;
+	}
+	public String[] getUser_tel() {
+		user_tel = u_tel.split("-");
+		return user_tel;
+	}
 }
+
+
+
+
+
+

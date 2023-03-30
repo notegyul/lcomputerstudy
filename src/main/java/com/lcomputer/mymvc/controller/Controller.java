@@ -95,6 +95,7 @@ public class Controller extends HttpServlet {
 				userService = UserService.getInstance();
 				num = req.getParameter("u_idx");
 				user = userService.getUser(Integer.parseInt(num));
+				//user-edit.jsp에서 hidden타입으로 폼태그 넘겨줘야 넘버어쩌고 오류 안 뜸
 				String id = req.getParameter("edit_id");
 				String pw = req.getParameter("edit_pw");
 				String name = req.getParameter("edit_name");
@@ -111,6 +112,18 @@ public class Controller extends HttpServlet {
 				req.setAttribute("user", user);
 				
 				break;
+				
+			case "/user-delete.test":
+				
+				userService = UserService.getInstance();
+				num = req.getParameter("u_idx");
+				user = userService.getUser(Integer.parseInt(num));
+				
+				userService.deleteUser(user);
+				view = "myuser/user-delete";
+				req.setAttribute("user", user);
+				break;
+				
 			
 		}
 		
