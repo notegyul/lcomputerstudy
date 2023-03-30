@@ -9,11 +9,11 @@ public class DBConnection {
 	public static Connection getConnection() throws SQLException, ClassNotFoundException{
 		Connection conn = null;
 		
-		String url = "jdbc:mysql://localhost:3306/user";
+		String url = "jdbc:mysql://localhost:3306/testdb";
 		String id = "root";
-		String pw = "1234";
+		String pw = "ckatkflekd!99";
 		
-		Class.forName("org.mariadb.jdbc.Driver");
+		Class.forName("com.mysql.cj.jdbc.Driver");
 		conn = DriverManager.getConnection(url, id, pw);
 		
 		return conn;

@@ -36,7 +36,7 @@ public class Controller extends HttpServlet{
 		switch(command) {
 			case "/user-list.do":
 				UserService userService = UserService.getInstance();
-				ArrayList<User> list = userService.getUsers(); //
+				ArrayList<User> list = userService.getUsers(); 
 				view = "user/list";
 				request.setAttribute("list", list);
 				break;
@@ -53,7 +53,7 @@ public class Controller extends HttpServlet{
 				userService = UserService.getInstance();
 				userService.insertUser(user);
 				
-				view = "user/insert-result";
+			view = "user/insert-result";
 				break;
 		}
 		

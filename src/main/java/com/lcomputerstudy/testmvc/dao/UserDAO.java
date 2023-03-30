@@ -68,6 +68,7 @@ public class UserDAO {
 	public void insertUser(User user) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		//PreparedStatement - 인파라미터(values(?,?)에서 '?')가 있는 동적 쿼리문 실행 시 사용
 		
 		try {
 			conn = DBConnection.getConnection();
@@ -90,5 +91,7 @@ public class UserDAO {
 			}
 		}
 	}
+
+	
 	
 }
