@@ -124,6 +124,10 @@ public class Controller extends HttpServlet {
 				req.setAttribute("user", user);
 				break;
 				
+			case "/register.test":
+				view = "board/put-on-record";
+				break;
+				
 			
 		}
 		

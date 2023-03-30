@@ -3,7 +3,7 @@
 - 등록, 수정, 삭제, 목록, 보기(DAO, service 완료->controller case로 작성할 것)
 - 테이블 설계(완료)
 - BoardService, BoardDao, Board 추가 필요(완료)
-- 기존 사용자 관리 서블릿에 추가 >>> ???
+- 기존 사용자 관리 서블릿에 추가 
 - MVC 로 개발
 답글
 - group, order, depth (설명 요청)
