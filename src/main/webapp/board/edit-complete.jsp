@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>글 등록 완료</title>
+<title>게시글 수정 완료</title>
 </head>
 <body>
-	<h2>등록 완료</h2>
-	<a href="register.test">뒤로 가기</a>
-</body>	
+	<h1>수정완료</h1>
+	<a href="title-list.test">돌아가기</a>
+</body>
 </html>

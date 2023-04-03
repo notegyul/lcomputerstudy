@@ -10,9 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.lcomputer.mymvc.service.BoardService;
 import com.lcomputer.mymvc.service.UserService;
+import com.lcomputer.mymvc.vo.Board;
 import com.lcomputer.mymvc.vo.User;
-import com.lcomputer.mymvc.dao.UserDAO;
 
 @WebServlet("*.test")
 public class Controller extends HttpServlet {
@@ -127,8 +128,68 @@ public class Controller extends HttpServlet {
 			case "/register.test":
 				view = "board/put-on-record";
 				break;
+			case "/register-process.test":
+				Board board = new Board();
+				board.setB_title(req.getParameter("title"));
+				board.setB_content(req.getParameter("content"));
+				board.setB_date("20230403");
+				board.setB_writer("test111");
+				board.setB_count(1);
+				board.setU_idx(4);
 				
-			
+				BoardService boardService = BoardService.getInstance();
+				boardService.regist(board);
+				
+				view = "board/record-complete";
+				break;
+				
+			case "/title-list.test":
+				boardService = BoardService.getInstance();
+				ArrayList<Board> bList = boardService.getBoardList();
+				view = "board/b-list";
+				req.setAttribute("bList", bList);
+				break;
+				
+			case "/content-detail.test":
+				boardService = BoardService.getInstance();
+				String idx = req.getParameter("b_idx");
+				board = boardService.getBoard(Integer.parseInt(idx));
+				
+				view = "board/content-detail";
+				req.setAttribute("board", board);
+				break;
+				
+			case "/content-edit.test":
+				boardService = BoardService.getInstance();
+				idx = req.getParameter("b_idx");
+				board = boardService.getBoard(Integer.parseInt(idx));
+				boardService.edit(board);
+				
+				view = "board/edit";
+				req.setAttribute("board", board);
+				break;
+				
+			case "/content-edit-process.test":
+				boardService = BoardService.getInstance();
+				idx = req.getParameter("b_idx");
+				board = boardService.getBoard(Integer.parseInt(idx));
+				
+				board.setB_title(req.getParameter("edit-title"));
+				//board.setB_content(req.getParameter("edit_content"));
+				
+				boardService.edit(board);
+				view = "board/edit-complete";
+				req.setAttribute("board", board);
+				break;
+			case "/content-delete.test":
+				boardService = BoardService.getInstance();
+				idx = req.getParameter("b_idx");
+				board = boardService.getBoard(Integer.parseInt(idx));
+				boardService.delete(board);
+				
+				view = "board/delete";
+				req.setAttribute("board", board);
+				break;
 		}
 		
 		RequestDispatcher rd = req.getRequestDispatcher(view+".jsp");

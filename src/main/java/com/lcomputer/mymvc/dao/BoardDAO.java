@@ -24,7 +24,7 @@ public class BoardDAO {
 	public void regist(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "insert into board(b_title,b_content,b_date,b_writer,b_count) values(?,?,?,?,?)";
+		String sql = "insert into board(b_title,b_content,b_date,b_writer,b_count,u_idx) values(?,?,?,?,?,?)";
 		
 		try {
 			conn = DB_Connection.getConnection();
@@ -34,13 +34,16 @@ public class BoardDAO {
 			pstmt.setString(3, board.getB_date());
 			pstmt.setString(4, board.getB_writer());
 			pstmt.setInt(5,board.getB_count());
+			pstmt.setInt(6,board.getU_idx());
+			
 			pstmt.executeUpdate();
+			
 		}catch(Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 		}finally {
 			try {
-				pstmt.close();
-				conn.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
 			}catch(SQLException e) {
 				e.printStackTrace();
 			}
@@ -152,7 +155,7 @@ public class BoardDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String sql = "delete from boad where b_idx=?";
+		String sql = "delete from board where b_idx=?";
 		
 		
 		try {
