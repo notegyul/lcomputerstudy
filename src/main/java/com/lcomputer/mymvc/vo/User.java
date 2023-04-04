@@ -8,7 +8,14 @@ public class User {
 	private String u_tel;
 	private String u_age;
 	private String[] user_tel;
+	private int rownum;
 	
+	public int getRownum() {
+		return rownum;
+	}
+	public void setRownum(int rownum) {
+		this.rownum = rownum;
+	}
 	public void setU_idx(int u_idx) {
 		this.u_idx = u_idx;
 	}

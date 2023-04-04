@@ -9,10 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.lcomputer.mymvc.service.BoardService;
 import com.lcomputer.mymvc.service.UserService;
 import com.lcomputer.mymvc.vo.Board;
+import com.lcomputer.mymvc.vo.Pagination;
 import com.lcomputer.mymvc.vo.User;
 
 @WebServlet("*.test")
@@ -24,6 +26,8 @@ public class Controller extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		int count = 0;
+		int page = 1;
 		res.setContentType("text/html; charset=utf-8");
 		req.setCharacterEncoding("utf-8");
 		
@@ -33,6 +37,9 @@ public class Controller extends HttpServlet {
 		String view = null;
 		User user = null;
 		String num;
+		HttpSession session = null;
+		
+		
 		
 		switch(command) {
 			case "/newjoin.test":
@@ -52,10 +59,26 @@ public class Controller extends HttpServlet {
 				view = "myuser/insert-result";
 				break;
 			case "/user-list.test":
+				String reqPage = req.getParameter("page");
+				if(reqPage != null) {
+					page = Integer.parseInt(reqPage);
+					
+				}
 				userService = UserService.getInstance();
-				ArrayList<User> list = userService.getUsers();
-				view = "myuser/list";
+				count = userService.getUsersCount();
+				
+				Pagination pagination = new Pagination();
+				pagination.setCount(count);
+				pagination.setPage(page);
+				pagination.init();
+				
+				ArrayList<User> list = userService.getUsers(pagination);
+				
+				
 				req.setAttribute("list", list);
+				req.setAttribute("pagination", pagination);
+				
+				view = "myuser/list";
 				break;
 			case "/user-detail.test":
 				userService = UserService.getInstance();
@@ -129,13 +152,16 @@ public class Controller extends HttpServlet {
 				view = "board/put-on-record";
 				break;
 			case "/register-process.test":
+				session = req.getSession();
+				user = (User)session.getAttribute("user");
+				
 				Board board = new Board();
 				board.setB_title(req.getParameter("title"));
 				board.setB_content(req.getParameter("content"));
 				board.setB_date("20230403");
 				board.setB_writer("test111");
 				board.setB_count(1);
-				board.setU_idx(4);
+				board.setU_idx(user.getU_idx());
 				
 				BoardService boardService = BoardService.getInstance();
 				boardService.regist(board);
@@ -163,7 +189,6 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				idx = req.getParameter("b_idx");
 				board = boardService.getBoard(Integer.parseInt(idx));
-				boardService.edit(board);
 				
 				view = "board/edit";
 				req.setAttribute("board", board);
@@ -175,12 +200,13 @@ public class Controller extends HttpServlet {
 				board = boardService.getBoard(Integer.parseInt(idx));
 				
 				board.setB_title(req.getParameter("edit-title"));
-				//board.setB_content(req.getParameter("edit_content"));
+				board.setB_content(req.getParameter("edit-content"));
 				
 				boardService.edit(board);
 				view = "board/edit-complete";
 				req.setAttribute("board", board);
 				break;
+				
 			case "/content-delete.test":
 				boardService = BoardService.getInstance();
 				idx = req.getParameter("b_idx");

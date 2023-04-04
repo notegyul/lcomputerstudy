@@ -1,0 +1,5 @@
+SELECT 		@rownum := @rownum -1 as rownum,
+				ta.*
+FROM     	user ta
+INNER join	(select @rownum := (select COUNT(*)-3+1 from user ta)) tb ON 1=1
+LIMIT    	3, 3

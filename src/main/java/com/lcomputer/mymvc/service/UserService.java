@@ -5,6 +5,7 @@ package com.lcomputer.mymvc.service;
 import java.util.ArrayList;
 
 import com.lcomputer.mymvc.dao.UserDAO;
+import com.lcomputer.mymvc.vo.Pagination;
 import com.lcomputer.mymvc.vo.User;
 
 
@@ -28,8 +29,8 @@ public class UserService {
 		dao.insertUser(user);
 	}
 	
-	public ArrayList<User> getUsers(){
-		return dao.getUsers();
+	public ArrayList<User> getUsers(Pagination pagination){
+		return dao.getUsers(pagination);
 	}
 	
 	public User getUser(int num) {
@@ -42,5 +43,9 @@ public class UserService {
 	public int deleteUser(User user) {
 		return dao.delete(user);
 	}
+	public int getUsersCount() {
+		return dao.getUsersCount();
+	}
+	
 	
 }

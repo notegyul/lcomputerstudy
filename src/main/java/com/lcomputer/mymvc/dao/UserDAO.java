@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.lcomputer.mymvc.database.DB_Connection;
+import com.lcomputer.mymvc.vo.Pagination;
 import com.lcomputer.mymvc.vo.User;
 
 
@@ -52,26 +53,38 @@ public class UserDAO {
 		}
 	}
 	
-	public ArrayList<User> getUsers(){
+	public ArrayList<User> getUsers(Pagination pagination){
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<User> list = null;
+		int pageNum = pagination.getPageNum();
 		
 		try {
 			conn = DB_Connection.getConnection();
-			String query = "select * from user";		//from mytest -> user(mysql 테이블 변경 필요)
+			//String query = "select * from user limit ?,3";		
+			String query = new StringBuilder()
+					.append("select 	@rownum := @rownum -1 as rownum,\n")
+					.append("           ta.*\n")
+					.append("from       user ta,\n")
+					.append("           (select @rownum := (select count(*)-?+1 from user ta)) tb\n")
+					.append("limit      ?, 3\n").toString();
+			
 			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1,pageNum);
+			pstmt.setInt(2, pageNum);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();
 			
 			while(rs.next()) {
 				User user = new User();
+				user.setRownum(rs.getInt("rownum"));
 				user.setU_idx(rs.getInt("u_idx"));
 				user.setU_id(rs.getString("u_id"));
 				user.setU_name(rs.getString("u_name"));
 				user.setU_tel(rs.getString("u_tel"));
 				user.setU_age(rs.getString("u_age"));
+				
 				list.add(user);
 			}
 			
@@ -225,6 +238,35 @@ public class UserDAO {
 		return result;
 	}
 	
+	public int getUsersCount() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+		
+		try {
+			conn = DB_Connection.getConnection();
+			String query = "select count(*) count from user";
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				count = rs.getInt("count");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
+	}
 	
 	
 	
