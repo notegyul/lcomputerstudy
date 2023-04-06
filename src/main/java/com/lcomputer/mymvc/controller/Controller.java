@@ -25,6 +25,37 @@ public class Controller extends HttpServlet {
 		doPost(req,res);
 	}
 	
+	String checkSession(HttpServletRequest req, HttpServletResponse res, String command) {
+		HttpSession session = req.getSession();
+		
+		String[] authList = {
+				"/user-list.test",
+				"/user-insert.test",
+				"/user-insert-process.test",
+				"/user-detail.test",
+				"/user-edit.test",
+				"/user-edit-process.test",
+				"/logout.test"
+				
+		};
+		
+		for(String item : authList) {
+			if (item.equals(command)) {
+				if(session.getAttribute("user") ==  null) {
+					command = "/access-denied.test";
+				}
+			}
+		}
+		
+		return command;
+		
+		
+		
+		
+	}
+	
+	
+	
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		int count = 0;
 		int page = 1;
@@ -38,6 +69,10 @@ public class Controller extends HttpServlet {
 		User user = null;
 		String num;
 		HttpSession session = null;
+		String pw = null;
+		command = checkSession(req,res,command);
+		
+		
 		
 		
 		
@@ -121,7 +156,7 @@ public class Controller extends HttpServlet {
 				user = userService.getUser(Integer.parseInt(num));
 				//user-edit.jsp에서 hidden타입으로 폼태그 넘겨줘야 넘버어쩌고 오류 안 뜸
 				String id = req.getParameter("edit_id");
-				String pw = req.getParameter("edit_pw");
+				pw = req.getParameter("edit_pw");
 				String name = req.getParameter("edit_name");
 				String tel = req.getParameter("edit_tel1") +"-"+req.getParameter("edit_tel2")+"-"+req.getParameter("edit_tel3");
 				String age = req.getParameter("edit_age");
@@ -216,6 +251,42 @@ public class Controller extends HttpServlet {
 				view = "board/delete";
 				req.setAttribute("board", board);
 				break;
+				
+			case "/user-login.test":
+				view = "myuser/login";
+				break;
+			case "/user-login-process.test":
+				idx = req.getParameter("login_id");
+				pw = req.getParameter("login_password");
+				
+				userService = UserService.getInstance();
+				user = userService.loginUser(idx,pw);
+				
+				if(user != null) {
+					session = req.getSession();
+				//	session.getAttribute("u_idx", user.getU_idx());
+				//	session.getAttribute("u_id", user.getU_id());
+				//	session.getAttibute("u_pw", user.getU_pw());
+				//	session.getAttribute("u_name", user.getU_name());
+					session.setAttribute("user", user);
+					
+					view = "myuser/login-result";
+				} else {
+					view = "myuser/login-fail";
+				}
+				
+				break;
+				
+			case "/logout.test":
+				session = req.getSession();
+				session.invalidate();
+				view = "myuser/login";
+				break;
+				
+			case "/access-denied.test":
+				view = "myuser/acess-denied";
+				break;
+				
 		}
 		
 		RequestDispatcher rd = req.getRequestDispatcher(view+".jsp");

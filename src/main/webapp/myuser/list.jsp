@@ -52,7 +52,7 @@
 <h1>회원 목록</h1>
 	<table>
 		<tr>
-			<td colspan="3">전체 회원 수: ${pagination.userCount}</td>
+			<td colspan="3">전체 회원 수: ${pagination.count}</td>
 		<tr>
 			<th>NO</th>
 			<th>ID</th>
@@ -71,13 +71,9 @@
 	<div>
 		<ul>
 			<c:choose>
-				<c:when test="${pagination.prevPage lt 5}">
-					<li style="display:none;">
-						<span>◀</span>
-					</li>
-				</c:when>
-				<c:when test="${pagination.prevPage ge 5}">
-					<li>
+				<%--${pagination.startPage > Pagination.pageUnit } --%>
+				<c:when test="${pagination.prevPage <= pagination.startPage && pagination.prevPage > 0}">
+					<li style="">
 						<a href="user-list.test?page=${pagination.prevPage}">
 							◀
 						</a>
@@ -87,12 +83,12 @@
 			<c:forEach var="i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
 				
 				<c:choose>
-					<c:when test="${pagination.page eq i}">
+					<c:when test="${pagination.page == i}">
 						<li style="background-color:#ededed;">
 							<span>${i}</span>
 						</li>
 					</c:when>
-					<c:when test="${pagination.page ne i}">
+					<c:when test="${pagination.page != i}">
 						<li>
 							<a href="user-list.test?page=${i}">${i}</a>
 						</li>
@@ -100,20 +96,12 @@
 				</c:choose>
 			</c:forEach>
 			<c:choose>
-				<c:when test="${ pagination.nextPage lt pagination.lastPage }">
+				<c:when test="${ pagination.nextPage <= pagination.lastPage }">
 					<li style="">
 						<a href="user-list.test?page=${ pagination.nextPage }">▶</a>
 					</li>
 				</c:when>
-				<c:when test="${ pagination.nextPage ge paination.lastPage }">
-					<li style="display:none;">
-						<a href="user-list.test?page=${pagination.nextPage }]">▶</a>
-					</li>
-				</c:when>
 			</c:choose>
-			<%-- <li>
-				<a href="userlist.test?page=${pagination.nextPage}">▶</a>
-			</li> --%>
 		</ul>
 	</div>
 

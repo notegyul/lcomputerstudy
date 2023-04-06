@@ -68,11 +68,12 @@ public class UserDAO {
 					.append("           ta.*\n")
 					.append("from       user ta,\n")
 					.append("           (select @rownum := (select count(*)-?+1 from user ta)) tb\n")
-					.append("limit      ?, 3\n").toString();
+					.append("limit      ?, ?\n").toString();
 			
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1,pageNum);
 			pstmt.setInt(2, pageNum);
+			pstmt.setInt(3, Pagination.perPage);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();
 			
@@ -267,6 +268,46 @@ public class UserDAO {
 		
 		return count;
 	}
+	
+	public User loginUser(String idx, String pw) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		User user = null;
+		
+		try {
+			conn = DB_Connection.getConnection();
+			String sql = "select * from user where u_id = ? and u_pw = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, idx);
+			pstmt.setString(2, pw);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				user = new User();
+				user.setU_idx(rs.getInt("u_idx"));
+				user.setU_pw(rs.getString("u_pw"));
+				user.setU_id(rs.getString("u_id"));
+				user.setU_name(rs.getString("u_name"));
+				
+				
+			}
+		}catch(Exception e) {
+			System.out.println("SQLException : " + e.getMessage());
+		}finally {
+			try{
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return user;
+	} //end of loginUser
+	
+	
+	
 	
 	
 	
