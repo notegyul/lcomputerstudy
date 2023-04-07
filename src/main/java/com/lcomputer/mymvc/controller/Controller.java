@@ -198,6 +198,8 @@ public class Controller extends HttpServlet {
 				board.setB_count(1);
 				board.setU_idx(user.getU_idx());
 				
+				//board.setB_group(user.getU_idx());
+				
 				BoardService boardService = BoardService.getInstance();
 				boardService.regist(board);
 				
@@ -284,7 +286,24 @@ public class Controller extends HttpServlet {
 				break;
 				
 			case "/access-denied.test":
+				
 				view = "myuser/acess-denied";
+				break;
+				
+			////	
+				
+				
+			case "/reply.test":
+				view = "board/reply";
+				break;
+				
+			case "/reply-process.test":
+				boardService = BoardService.getInstance();
+				idx = req.getParameter("b_idx");
+				board = boardService.getBoard(Integer.parseInt(idx));
+				
+				boardService.replyTo(board);
+				view = "board/reply-complete";
 				break;
 				
 		}

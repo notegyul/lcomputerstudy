@@ -42,3 +42,13 @@ pstmt = conn.prepare(update group = last_insert_id() where pk = last_insert_id()
 pstmt.excuteUpdate();
 답글의 경우
 파라미터로 group order depth
+
+
+
+
+
+
+
+
+content-detail.jsp
+<form action="reply-process.test" name="board" method="post"> value??

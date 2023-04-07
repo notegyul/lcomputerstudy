@@ -35,5 +35,10 @@ public class BoardService {
 	public int delete(Board board) {
 		return dao.delete(board);
 	}
-
+	
+	
+	public int replyTo(Board board) {
+		return dao.replyTo(board);
+	}
+	
 }

@@ -24,7 +24,7 @@ public class BoardDAO {
 	public void regist(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "insert into board(b_title,b_content,b_date,b_writer,b_count,u_idx) values(?,?,now(),?,?,?)";
+		String sql = "insert into board(b_title,b_content,b_date,b_writer,b_count,u_idx, b_group, b_order, b_depth) values(?,?,now(),?,?,?,1,1,0)";
 		
 		try {
 			conn = DB_Connection.getConnection();
@@ -36,6 +36,10 @@ public class BoardDAO {
 			pstmt.setInt(4,board.getB_count());
 			pstmt.setInt(5,board.getU_idx());
 			
+			pstmt.executeUpdate();
+			pstmt.close();
+			sql = "UPDATE board SET b_group = last_insert_id() where b_idx = last_insert_id()";
+			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 			
 		}catch(Exception e) {
@@ -179,6 +183,35 @@ public class BoardDAO {
 		return result;
 	}
 	
+	
+	public int replyTo(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "update board set b_order = b_order+1 where b_group = ? and b_order >= ? and b_idx != last_insert_id()";
+		int result = 0;
+		
+		
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, board.getB_group());
+			pstmt.setInt(2, board.getB_order());
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return result;
+	}
 	
 	
 	
