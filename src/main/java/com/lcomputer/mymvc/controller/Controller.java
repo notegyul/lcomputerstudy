@@ -72,10 +72,6 @@ public class Controller extends HttpServlet {
 		String pw = null;
 		command = checkSession(req,res,command);
 		
-		
-		
-		
-		
 		switch(command) {
 			case "/newjoin.test":
 				view = "myuser/newjoin";
@@ -183,6 +179,43 @@ public class Controller extends HttpServlet {
 				req.setAttribute("user", user);
 				break;
 				
+			case "/user-login.test":
+				view = "myuser/login";
+				break;
+			case "/user-login-process.test":
+				String idx = req.getParameter("login_id");
+				pw = req.getParameter("login_password");
+				
+				userService = UserService.getInstance();
+				user = userService.loginUser(idx,pw);
+				
+				if(user != null) {
+					session = req.getSession();
+				//	session.getAttribute("u_idx", user.getU_idx());
+				//	session.getAttribute("u_id", user.getU_id());
+				//	session.getAttibute("u_pw", user.getU_pw());
+				//	session.getAttribute("u_name", user.getU_name());
+					session.setAttribute("user", user);
+					
+					view = "myuser/login-result";
+				} else {
+					view = "myuser/login-fail";
+				}
+				
+				break;
+				
+			case "/logout.test":
+				session = req.getSession();
+				session.invalidate();
+				view = "myuser/login";
+				break;
+				
+			case "/access-denied.test":
+				
+				view = "myuser/acess-denied";
+				break;
+				
+				
 			case "/register.test":
 				view = "board/put-on-record";
 				break;
@@ -191,6 +224,7 @@ public class Controller extends HttpServlet {
 				user = (User)session.getAttribute("user");
 				
 				Board board = new Board();
+				
 				board.setB_title(req.getParameter("title"));
 				board.setB_content(req.getParameter("content"));
 				board.setB_date("20230403");
@@ -198,7 +232,8 @@ public class Controller extends HttpServlet {
 				board.setB_count(1);
 				board.setU_idx(user.getU_idx());
 				
-				//board.setB_group(user.getU_idx());
+				
+				
 				
 				BoardService boardService = BoardService.getInstance();
 				boardService.regist(board);
@@ -215,7 +250,7 @@ public class Controller extends HttpServlet {
 				
 			case "/content-detail.test":
 				boardService = BoardService.getInstance();
-				String idx = req.getParameter("b_idx");
+				idx = req.getParameter("b_idx");
 				board = boardService.getBoard(Integer.parseInt(idx));
 				
 				view = "board/content-detail";
@@ -254,44 +289,6 @@ public class Controller extends HttpServlet {
 				req.setAttribute("board", board);
 				break;
 				
-			case "/user-login.test":
-				view = "myuser/login";
-				break;
-			case "/user-login-process.test":
-				idx = req.getParameter("login_id");
-				pw = req.getParameter("login_password");
-				
-				userService = UserService.getInstance();
-				user = userService.loginUser(idx,pw);
-				
-				if(user != null) {
-					session = req.getSession();
-				//	session.getAttribute("u_idx", user.getU_idx());
-				//	session.getAttribute("u_id", user.getU_id());
-				//	session.getAttibute("u_pw", user.getU_pw());
-				//	session.getAttribute("u_name", user.getU_name());
-					session.setAttribute("user", user);
-					
-					view = "myuser/login-result";
-				} else {
-					view = "myuser/login-fail";
-				}
-				
-				break;
-				
-			case "/logout.test":
-				session = req.getSession();
-				session.invalidate();
-				view = "myuser/login";
-				break;
-				
-			case "/access-denied.test":
-				
-				view = "myuser/acess-denied";
-				break;
-				
-			////	
-				
 				
 			case "/reply.test":
 				view = "board/reply";
@@ -299,8 +296,11 @@ public class Controller extends HttpServlet {
 				
 			case "/reply-process.test":
 				boardService = BoardService.getInstance();
-				idx = req.getParameter("b_idx");
-				board = boardService.getBoard(Integer.parseInt(idx));
+				idx = req.getParameter("b_group");
+				board = new Board();
+				board.setB_title(req.getParameter("title"));
+				board.setB_content(req.getParameter("content"));
+				
 				
 				boardService.replyTo(board);
 				view = "board/reply-complete";

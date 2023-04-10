@@ -49,10 +49,10 @@
 			</form>
 		</td>		
 		<td style="border:none;">
-			<form method="post">
-				<input type="hidden" name="b_group" value="${board.b_group}">
-				<a href="reply.test?b_group=${board.b_group}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">답글</a>
-			</form>
+		
+			<input type="hidden" name="b_group" value="${board.b_group}">
+			<a href="reply.test?b_group=${board.b_group}&b_order=${board.b_order}&b_depth=${board.b_depth}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">답글</a>
+			
 			
 		</td>	
 	</tr>
