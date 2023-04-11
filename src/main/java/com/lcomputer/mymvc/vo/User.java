@@ -1,5 +1,7 @@
 package com.lcomputer.mymvc.vo;
 
+import java.util.Arrays;
+
 public class User {
 	private int u_idx;
 	private String u_id;
@@ -58,6 +60,11 @@ public class User {
 	public String[] getUser_tel() {
 		user_tel = u_tel.split("-");
 		return user_tel;
+	}
+	@Override
+	public String toString() {
+		return "User [u_idx=" + u_idx + ", u_id=" + u_id + ", u_pw=" + u_pw + ", u_name=" + u_name + ", u_tel=" + u_tel
+				+ ", u_age=" + u_age + ", user_tel=" + Arrays.toString(user_tel) + ", rownum=" + rownum + "]";
 	}
 }
 

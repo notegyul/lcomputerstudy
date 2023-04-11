@@ -291,16 +291,33 @@ public class Controller extends HttpServlet {
 				
 				
 			case "/reply.test":
+				board = new Board();
+				String b_group = req.getParameter("b_group");
+				String b_order = req.getParameter("b_order");
+				String b_depth = req.getParameter("b_depth");
+				board.setB_group(Integer.parseInt(b_group));
+				board.setB_order(Integer.parseInt(b_order));
+				board.setB_depth(Integer.parseInt(b_depth));
+				
+				req.setAttribute("board", board);
 				view = "board/reply";
 				break;
 				
 			case "/reply-process.test":
 				boardService = BoardService.getInstance();
-				idx = req.getParameter("b_group");
+				
+				
+				session = req.getSession();
+				user = (User) session.getAttribute("user");
+				user.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				
 				board = new Board();
 				board.setB_title(req.getParameter("title"));
 				board.setB_content(req.getParameter("content"));
-				
+				board.setB_group(Integer.parseInt(req.getParameter("b_group")));
+				board.setB_order(Integer.parseInt(req.getParameter("b_order"))+1);
+				board.setB_depth(Integer.parseInt(req.getParameter("b_depth"))+1);
+				board.setU_idx(user.getU_idx());
 				
 				boardService.replyTo(board);
 				view = "board/reply-complete";

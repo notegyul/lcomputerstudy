@@ -191,8 +191,7 @@ public class BoardDAO {
 	public int replyTo(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "insert into board(b_title, b_content) values (?,?)";
-		//"update board set b_order = b_order+1 where b_group = ? and b_order >= ? and b_idx != last_insert_id()";
+		String sql = "insert into board (b_title, b_content, b_date,u_idx, b_group, b_order, b_depth) values (?,?,now(),?,?,?,?)";
 		int result = 0;
 		
 		
@@ -202,10 +201,13 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, board.getB_title());
 			pstmt.setString(2, board.getB_content());
+			pstmt.setInt(3, board.getU_idx());
+			pstmt.setInt(4, board.getB_group());
+			pstmt.setInt(5, board.getB_order());
+			pstmt.setInt(6, board.getB_depth());
 			pstmt.executeUpdate();
 			pstmt.close();
-			// 위는 DB 올리려고 함 
-			sql = "update board set b_order = b_order+1 where b_group = ? and b_order >= ? and b_idx != last_insert_id()";
+			sql = "update board set b_order = b_order+1 where b_group = ? and b_order >= ? and b_idx != last_insert_id() order by b_order desc";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, board.getB_group());
 			pstmt.setInt(2, board.getB_order());
