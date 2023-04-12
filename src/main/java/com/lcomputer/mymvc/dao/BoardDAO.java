@@ -53,13 +53,13 @@ public class BoardDAO {
 			}
 		}
 	}
-	
+	//리스트 
 	public ArrayList<Board> getBoardList(){
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Board> list = null;
-		String sql = "select * from board";
+		String sql = "select * from board order by b_group, b_depth";
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -74,6 +74,10 @@ public class BoardDAO {
 				board.setB_date(rs.getString("b_date"));
 				board.setB_writer(rs.getString("b_writer"));
 				board.setB_count(rs.getInt("b_count"));
+				
+				board.setB_group(rs.getInt("b_group"));
+				board.setB_order(rs.getInt("b_order"));
+				board.setB_depth(rs.getInt("b_depth"));
 				list.add(board);
 			}
 		}catch(Exception e) {
@@ -91,6 +95,7 @@ public class BoardDAO {
 		return list;
 	}
 	
+	//리스트 클릭 -> 게시글 상세 
 	public Board getBoard(int idx) {
 		Board board = new Board();
 		Connection conn = null;
@@ -207,10 +212,10 @@ public class BoardDAO {
 			pstmt.setInt(6, board.getB_depth());
 			pstmt.executeUpdate();
 			pstmt.close();
-			sql = "update board set b_order = b_order+1 where b_group = ? and b_order >= ? and b_idx != last_insert_id() order by b_order desc";
+			sql = "update board set b_order = b_order+1 where b_group = ? and b_order >= ? and b_idx != last_insert_id()";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, board.getB_group());
-			pstmt.setInt(2, board.getB_order());
+			pstmt.setInt(2, board.getB_order()); 
 			result = pstmt.executeUpdate();
 		}catch(Exception e) {
 			e.printStackTrace();
