@@ -11,7 +11,14 @@ public class Board {
 	private int b_group;
 	private int b_order;
 	private int b_depth;
+	private String b_comment;
 	
+	public String getB_comment() {
+		return b_comment;
+	}
+	public void setB_comment(String b_comment) {
+		this.b_comment = b_comment;
+	}
 	
 	
 	public int getB_group() {

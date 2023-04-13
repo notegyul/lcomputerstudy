@@ -41,4 +41,8 @@ public class BoardService {
 		return dao.replyTo(board);
 	}
 	
+	public int commentTo(Board board) {
+		return dao.commentTo(board);
+	}
+	
 }

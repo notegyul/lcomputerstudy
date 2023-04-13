@@ -52,6 +52,7 @@ ${sessionScope.user.u_name}님
 	<ul>
 	<li><a href="user-list.test">회원 목록</a></li>
 	<li><a href="logout.test">로그아웃</a></li>
+	<li><a href="title-list.test">글 목록</a></li>
 	</ul>
 </div>
 

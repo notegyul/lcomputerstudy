@@ -323,6 +323,23 @@ public class Controller extends HttpServlet {
 				view = "board/reply-complete";
 				break;
 				
+			case "/comment.test":
+				
+				session = req.getSession();
+				user = (User) session.getAttribute("user");
+				user.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				
+				board = new Board();
+				board.setB_comment(req.getParameter("com"));
+				board.setU_idx(user.getU_idx());
+				req.setAttribute("board", board);
+				
+				boardService = BoardService.getInstance();
+				boardService.commentTo(board);
+				
+				view = "board/content-detail";
+				break;
+				
 		}
 		
 		RequestDispatcher rd = req.getRequestDispatcher(view+".jsp");

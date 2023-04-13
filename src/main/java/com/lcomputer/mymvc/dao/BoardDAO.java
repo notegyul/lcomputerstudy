@@ -59,7 +59,7 @@ public class BoardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Board> list = null;
-		String sql = "select * from board order by b_group, b_depth";
+		String sql = "select * from board order by b_group, b_order";
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -118,8 +118,8 @@ public class BoardDAO {
 				board.setB_count(rs.getInt("b_count"));
 				
 				board.setB_group(rs.getInt("b_group"));
-				board.setB_order(1);
-				board.setB_depth(0);
+				board.setB_order(rs.getInt("b_order"));
+				board.setB_depth(rs.getInt("b_depth"));
 			
 			}
 		} catch(Exception e) {
@@ -215,7 +215,8 @@ public class BoardDAO {
 			sql = "update board set b_order = b_order+1 where b_group = ? and b_order >= ? and b_idx != last_insert_id()";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, board.getB_group());
-			pstmt.setInt(2, board.getB_order()); 
+			pstmt.setInt(2, board.getB_order());
+			
 			result = pstmt.executeUpdate();
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -230,6 +231,35 @@ public class BoardDAO {
 		
 		
 		return result;
+	}
+	
+	public int commentTo(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "insert into comment (b_comment,b_idx,u_idx,b_date) values(?,?,?,now())";
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,board.getB_comment());
+			pstmt.setInt(2, board.getB_idx());
+			pstmt.setInt(3, board.getU_idx());
+			result = pstmt.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+		
 	}
 	
 	
