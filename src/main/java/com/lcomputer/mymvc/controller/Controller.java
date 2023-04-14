@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import com.lcomputer.mymvc.service.BoardService;
 import com.lcomputer.mymvc.service.UserService;
 import com.lcomputer.mymvc.vo.Board;
+import com.lcomputer.mymvc.vo.Comment;
 import com.lcomputer.mymvc.vo.Pagination;
 import com.lcomputer.mymvc.vo.User;
 
@@ -71,6 +72,8 @@ public class Controller extends HttpServlet {
 		HttpSession session = null;
 		String pw = null;
 		command = checkSession(req,res,command);
+		
+		boolean isRedirected = false;
 		
 		switch(command) {
 			case "/newjoin.test":
@@ -252,7 +255,9 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				idx = req.getParameter("b_idx");
 				board = boardService.getBoard(Integer.parseInt(idx));
-				
+				//4.14
+				//여기서 board에 comments 리스트 넣어야 함. 근데 comments는 어디서 가져오냐
+				//board.setComments(comments);
 				view = "board/content-detail";
 				req.setAttribute("board", board);
 				break;
@@ -327,23 +332,33 @@ public class Controller extends HttpServlet {
 				
 				session = req.getSession();
 				user = (User) session.getAttribute("user");
-				user.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				Comment comment = new Comment();
 				
-				board = new Board();
-				board.setB_comment(req.getParameter("com"));
-				board.setU_idx(user.getU_idx());
-				req.setAttribute("board", board);
+				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
+				comment.setComment(req.getParameter("b-comment"));
+				comment.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				
 				
 				boardService = BoardService.getInstance();
-				boardService.commentTo(board);
+				boardService.commentTo(comment);
 				
-				view = "board/content-detail";
+				req.setAttribute("comment", comment);
+				
+				view = "content-detail.test?b_idx=" + req.getParameter("b_idx");
+				isRedirected = true;
+				
+				
+				
 				break;
 				
 		}
 		
-		RequestDispatcher rd = req.getRequestDispatcher(view+".jsp");
-		rd.forward(req, res);
+		if (isRedirected) {
+			res.sendRedirect(view);
+		} else {
+			RequestDispatcher rd = req.getRequestDispatcher(view+".jsp");
+			rd.forward(req, res);
+		}
 		
 	}
 	

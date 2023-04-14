@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.lcomputer.mymvc.dao.BoardDAO;
 import com.lcomputer.mymvc.vo.Board;
+import com.lcomputer.mymvc.vo.Comment;
 
 public class BoardService {
 
@@ -41,8 +42,8 @@ public class BoardService {
 		return dao.replyTo(board);
 	}
 	
-	public int commentTo(Board board) {
-		return dao.commentTo(board);
+	public int commentTo(Comment comment) {
+		return dao.commentTo(comment);
 	}
 	
 }

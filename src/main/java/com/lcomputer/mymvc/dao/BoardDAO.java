@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.lcomputer.mymvc.database.DB_Connection;
 import com.lcomputer.mymvc.vo.Board;
+import com.lcomputer.mymvc.vo.Comment;
 
 public class BoardDAO {
 
@@ -116,6 +117,8 @@ public class BoardDAO {
 				board.setB_date(rs.getString("b_date"));
 				board.setB_writer(rs.getString("b_writer"));
 				board.setB_count(rs.getInt("b_count"));
+				
+				
 				
 				board.setB_group(rs.getInt("b_group"));
 				board.setB_order(rs.getInt("b_order"));
@@ -233,18 +236,18 @@ public class BoardDAO {
 		return result;
 	}
 	
-	public int commentTo(Board board) {
+	public int commentTo(Comment comment) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String sql = "insert into comment (b_comment,b_idx,u_idx,b_date) values(?,?,?,now())";
+		String sql = "insert into comment (b_comment,b_idx,u_idx,c_date) values(?,?,?,now())";
 		
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,board.getB_comment());
-			pstmt.setInt(2, board.getB_idx());
-			pstmt.setInt(3, board.getU_idx());
+			pstmt.setString(1,comment.getComment());
+			pstmt.setInt(2, comment.getB_idx());
+			pstmt.setInt(3, comment.getU_idx());
 			result = pstmt.executeUpdate();
 			
 		}catch(Exception e) {
@@ -260,6 +263,43 @@ public class BoardDAO {
 		
 		return result;
 		
+	}
+	
+	public ArrayList<Comment> getCommentList(){
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Comment> list = null;
+		String sql = "select * from comment order by c_date desc";
+	
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			list = new ArrayList<>();
+			
+			while(rs.next()) {
+				Comment comment = new Comment();
+				comment.setC_idx(rs.getInt("c_idx"));
+				comment.setComment(rs.getString("b_comment"));
+				comment.setB_idx(rs.getInt("b_idx"));
+				comment.setU_idx(rs.getInt("u_idx"));
+				list.add(comment);
+			
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) pstmt.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
 	}
 	
 	

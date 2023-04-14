@@ -1,5 +1,7 @@
 package com.lcomputer.mymvc.vo;
 
+import java.util.ArrayList;
+
 public class Board {
 	private int b_idx;
 	private String b_title;
@@ -12,6 +14,14 @@ public class Board {
 	private int b_order;
 	private int b_depth;
 	private String b_comment;
+	private ArrayList<Comment> comments;
+	
+	public ArrayList<Comment> getComments(){
+		return comments;
+	}
+	public void setComments(Comment comment) {
+		comments.add(comment);
+	}
 	
 	public String getB_comment() {
 		return b_comment;
