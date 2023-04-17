@@ -64,13 +64,15 @@
 		<input type="hidden" name="u_idx" value="${sessionScope.user.u_idx}">
 		<input type="hidden" name="b_idx" value="${board.b_idx}">
 		
-		<textarea rows="8" cols="20" name="b-comment" placeholder="댓글 입력"></textarea>
+		<textarea rows="8" cols="20" name="b_comment" placeholder="댓글 입력"></textarea>
 		<br/>
 		<input type=submit value="댓글등록">
 	</form>
 	<br/>
 	<br/>
-	<h4>${comment.comment}</h4>	
+	<c:forEach items="${comment}" var="comments">
+		${comments.b_comment}
+	</c:forEach>	
 	
 	
 	

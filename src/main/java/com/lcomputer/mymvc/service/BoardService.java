@@ -46,4 +46,8 @@ public class BoardService {
 		return dao.commentTo(comment);
 	}
 	
+	public ArrayList<Comment> getCommentList(){
+		return dao.getCommentList();
+	}
+	
 }

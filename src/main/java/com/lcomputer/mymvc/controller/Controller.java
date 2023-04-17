@@ -255,11 +255,11 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				idx = req.getParameter("b_idx");
 				board = boardService.getBoard(Integer.parseInt(idx));
-				//4.14
-				//여기서 board에 comments 리스트 넣어야 함. 근데 comments는 어디서 가져오냐
-				//board.setComments(comments);
+				
 				view = "board/content-detail";
 				req.setAttribute("board", board);
+				
+				
 				break;
 				
 			case "/content-edit.test":
@@ -335,8 +335,9 @@ public class Controller extends HttpServlet {
 				Comment comment = new Comment();
 				
 				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
-				comment.setComment(req.getParameter("b-comment"));
+				comment.setComment(req.getParameter("b_comment"));
 				comment.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				
 				
 				
 				boardService = BoardService.getInstance();
@@ -344,9 +345,10 @@ public class Controller extends HttpServlet {
 				
 				req.setAttribute("comment", comment);
 				
+				
+				
 				view = "content-detail.test?b_idx=" + req.getParameter("b_idx");
 				isRedirected = true;
-				
 				
 				
 				break;

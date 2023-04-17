@@ -249,6 +249,13 @@ public class BoardDAO {
 			pstmt.setInt(2, comment.getB_idx());
 			pstmt.setInt(3, comment.getU_idx());
 			result = pstmt.executeUpdate();
+			/*
+			pstmt.close();
+			sql = "select * from comment where b_idx=? order by c_date desc";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, comment.getB_idx());
+			pstmt.executeQuery();
+			*/
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -270,11 +277,12 @@ public class BoardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Comment> list = null;
-		String sql = "select * from comment order by c_date desc";
-	
+		String sql = "select * from comment  order by c_date desc";
+															//where b_idx=?
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
+			//pstmt.setInt(1, --);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();
 			
