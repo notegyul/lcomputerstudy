@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>게시글 확인하기</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <style>
 	table {
@@ -63,21 +64,87 @@
 	<form action="comment.test" name="com" method="post">
 		<input type="hidden" name="u_idx" value="${sessionScope.user.u_idx}">
 		<input type="hidden" name="b_idx" value="${board.b_idx}">
-		
+			
 		<textarea rows="8" cols="20" name="b_comment" placeholder="댓글 입력"></textarea>
 		<br/>
 		<input type=submit value="댓글등록">
 	</form>
 	<br/>
 	<br/>
-	<c:forEach items="${comment}" var="comments">
-		${comments.b_comment}
-	</c:forEach>	
+	
+	<table>
+		<tr>
+			<th>내용</th>
+			<th>작성자</th>
+			<th>작성일시</th>
+			<th>기능</th>
+		</tr>
+		<c:forEach items="${cList}" var="comment">
+			<tr>
+				<td>${comment.b_comment}</td>
+				<td></td>
+				<td>${comment.c_date}</td>
+				<td>
+					<button class="btn_comment">댓글</button>
+					<button class="btn_modify_comment">수정</button>
+					<button class="btn_delete_comment">삭제</button>
+				</td>
+			</tr>
+			<tr style="display: none;">
+				<td colspan="3">
+					<textarea rows="2" cols="80"></textarea>
+				</td>
+					
+				<td>
+					<button class="btn_reg_comment">등록</button>
+					<button class="btn_cancel_comment">취소</button>
+				</td>
+			</tr>
+			<tr style="display: none;">
+				<td colspan="3">
+					<textarea rows="2" cols="80">${comment.b_comment}</textarea>
+				</td>
+
+				<td>
+					<button class="btn_reg_comment">등록</button>
+					<button class="btn_cancel_comment">취소</button>
+				</td>
+			</tr>
+		</c:forEach>	
+	</table>
+	
+<script>
+$(document).on('click', '.btn_reg_comment', function () {
+	let contents = $(this).parent().prev().find('textarea').val();
+	console.log(contents);
+	
+	$.ajax({
+		method: "POST",
+		url: "edit.do",
+		data: { b_comment: contents }
+	})
+	.done(function( msg ) {
+		alert( "Data Saved: " + msg );
+	});
+});
+
+$(document).on('click', '.btn_comment', function () {
+	$(this).parent().parent().next().css('display', '');
 	
 	
-	
-	
-	
-	
+});
+
+$(document).on('click', '.btn_cancel_comment', function(){
+	$(this).parent().parent().css('display','none');
+});
+
+$(document).on('click', '.btn_modify_comment', function(){
+	$(this).parent().parent().next().next().css('display','');
+});
+
+
+
+
+</script>
 </body>
 </html>

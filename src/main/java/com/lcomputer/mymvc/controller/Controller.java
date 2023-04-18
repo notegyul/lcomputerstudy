@@ -259,6 +259,9 @@ public class Controller extends HttpServlet {
 				view = "board/content-detail";
 				req.setAttribute("board", board);
 				
+				ArrayList<Comment> cList = boardService.getCommentList(board);
+				req.setAttribute("cList", cList);
+				
 				
 				break;
 				
@@ -330,22 +333,17 @@ public class Controller extends HttpServlet {
 				
 			case "/comment.test":
 				
+				boardService = BoardService.getInstance();
 				session = req.getSession();
 				user = (User) session.getAttribute("user");
 				Comment comment = new Comment();
 				
 				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
-				comment.setComment(req.getParameter("b_comment"));
+				comment.setB_comment(req.getParameter("b_comment"));
 				comment.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
-				
-				
-				
-				boardService = BoardService.getInstance();
 				boardService.commentTo(comment);
 				
-				req.setAttribute("comment", comment);
-				
-				
+
 				
 				view = "content-detail.test?b_idx=" + req.getParameter("b_idx");
 				isRedirected = true;

@@ -245,17 +245,10 @@ public class BoardDAO {
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,comment.getComment());
+			pstmt.setString(1,comment.getB_comment());
 			pstmt.setInt(2, comment.getB_idx());
 			pstmt.setInt(3, comment.getU_idx());
 			result = pstmt.executeUpdate();
-			/*
-			pstmt.close();
-			sql = "select * from comment where b_idx=? order by c_date desc";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, comment.getB_idx());
-			pstmt.executeQuery();
-			*/
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -272,26 +265,30 @@ public class BoardDAO {
 		
 	}
 	
-	public ArrayList<Comment> getCommentList(){
+	public ArrayList<Comment> getCommentList(Board board){
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Comment> list = null;
-		String sql = "select * from comment  order by c_date desc";
-															//where b_idx=?
+		String sql = "select * from comment where b_idx = ? order by c_date desc";
+															
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			//pstmt.setInt(1, --);
+			pstmt.setInt(1, board.getB_idx());
 			rs = pstmt.executeQuery();
+			
+			
+			
 			list = new ArrayList<>();
 			
 			while(rs.next()) {
 				Comment comment = new Comment();
 				comment.setC_idx(rs.getInt("c_idx"));
-				comment.setComment(rs.getString("b_comment"));
+				comment.setB_comment(rs.getString("b_comment"));
 				comment.setB_idx(rs.getInt("b_idx"));
 				comment.setU_idx(rs.getInt("u_idx"));
+				comment.setC_date(rs.getString("c_date"));
 				list.add(comment);
 			
 			}
@@ -301,7 +298,7 @@ public class BoardDAO {
 			try {
 				if(rs != null) rs.close();
 				if(pstmt != null) pstmt.close();
-				if(conn != null) pstmt.close();
+				if(conn != null) conn.close();
 			}catch(SQLException e){
 				e.printStackTrace();
 			}

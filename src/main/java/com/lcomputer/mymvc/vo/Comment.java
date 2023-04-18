@@ -33,11 +33,23 @@ public class Comment {
 	public void setU_idx(int u_idx) {
 		this.u_idx = u_idx;
 	}
-	public String getComment() {
+	
+	public String getB_comment() {
 		return b_comment;
 	}
-	public void setComment(String b_comment) {
+	public void setB_comment(String b_comment) {
 		this.b_comment = b_comment;
+	}
+	public String getC_date() {
+		return c_date;
+	}
+	public void setC_date(String c_date) {
+		this.c_date = c_date;
+	}
+	@Override
+	public String toString() {
+		return "Comment [c_idx=" + c_idx + ", b_idx=" + b_idx + ", u_idx=" + u_idx + ", b_comment=" + b_comment
+				+ ", c_date=" + c_date + "]";
 	}
 	
 	
