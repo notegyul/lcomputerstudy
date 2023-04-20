@@ -308,6 +308,44 @@ public class BoardDAO {
 	}
 	
 	
+	//잘못 만든 메서드 ㅋ
+	public Comment getComment(Board board) {
+		Comment comment = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from comment where b_idx=?";
+		//where b_idx=?
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, board.getB_idx());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				comment = new Comment();
+				comment.setB_comment(rs.getString("b_comment"));
+				comment.setC_date(rs.getString("c_date"));
+				comment.setB_idx(rs.getInt("b_idx"));
+				comment.setU_idx(rs.getInt("u_idx"));
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try{
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return comment;
+	}
+	
+	
 	
 	
 	

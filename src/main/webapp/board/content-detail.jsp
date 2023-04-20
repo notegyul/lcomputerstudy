@@ -72,7 +72,7 @@
 	<br/>
 	<br/>
 	
-	<table>
+	<table id="commentList">
 		<tr>
 			<th>내용</th>
 			<th>작성자</th>
@@ -96,7 +96,8 @@
 				</td>
 					
 				<td>
-					<button class="btn_reg_comment">등록</button>
+					
+					<button class="btn_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" >등록</button>
 					<button class="btn_cancel_comment">취소</button>
 				</td>
 			</tr>
@@ -116,15 +117,19 @@
 <script>
 $(document).on('click', '.btn_reg_comment', function () {
 	let contents = $(this).parent().prev().find('textarea').val();
-	console.log(contents);
+	//console.log(contents);
+	//let cIdx = $(this).attr('cidx');
+	let bIdx = $(this).attr('bidx');
+	let uIdx = $(this).attr('uidx');
+	
 	
 	$.ajax({
 		method: "POST",
-		url: "edit.do",
-		data: { b_comment: contents }
+		url: "aj-write-comment.test",
+		data: { b_comment: contents,  b_idx: bIdx, u_idx:uIdx }
 	})
-	.done(function( msg ) {
-		alert( "Data Saved: " + msg );
+	.done(function( data ) {
+		$('#commentList').html(data);
 	});
 });
 

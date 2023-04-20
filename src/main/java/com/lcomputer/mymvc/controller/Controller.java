@@ -350,6 +350,21 @@ public class Controller extends HttpServlet {
 				
 				
 				break;
+			case "/aj-write-comment.test":
+				boardService = BoardService.getInstance();
+				session = req.getSession();
+				user = (User) session.getAttribute("user");
+				board = boardService.getBoard(Integer.parseInt(req.getParameter("b_idx")));
+				comment = new Comment();
+				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
+				comment.setB_comment(req.getParameter("b_comment"));
+				comment.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				boardService.commentTo(comment);
+				cList = boardService.getCommentList(board);
+				req.setAttribute("cList", cList);
+				req.setAttribute("comment", comment);
+				view = "board/test";
+				break;
 				
 		}
 		

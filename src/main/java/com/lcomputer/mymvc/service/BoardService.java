@@ -49,5 +49,8 @@ public class BoardService {
 	public ArrayList<Comment> getCommentList(Board board){
 		return dao.getCommentList(board);
 	}
+	public Comment getComment(Board board) {
+		return dao.getComment(board);
+	}
 	
 }
