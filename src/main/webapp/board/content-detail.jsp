@@ -87,7 +87,7 @@
 				<td>
 					<button class="btn_comment">댓글</button>
 					<button class="btn_modify_comment">수정</button>
-					<button class="btn_delete_comment">삭제</button>
+					<button class="btn_delete_comment" bidx="${comment.b_idx}" uidx="${comment.u_idx}" cidx="${comment.c_idx}">삭제</button>
 				</td>
 			</tr>
 			<tr style="display: none;">
@@ -107,8 +107,8 @@
 				</td>
 
 				<td>
-					<button class="btn_reg_comment">등록</button>
-					<button class="btn_cancel_comment">취소</button>
+					<button class="btn_edit_reg_comment" bidx="${comment.b_idx}" uidx="${comment.u_idx}" cidx="${comment.c_idx}" cdate="${comment.c_date}">등록</button>
+					<button class="btn_edit_cancel_comment">취소</button>
 				</td>
 			</tr>
 		</c:forEach>	
@@ -147,7 +147,38 @@ $(document).on('click', '.btn_modify_comment', function(){
 	$(this).parent().parent().next().next().css('display','');
 });
 
+$(document).on('click', '.btn_edit_reg_comment', function(){
+	let contents = $(this).parent().prev().find('textarea').val();
+	let bIdx = $(this).attr('bidx');
+	let uIdx = $(this).attr('uidx');
+	let cIdx = $(this).attr('cidx');
+	let cDate = $(this).attr('cdate');
+	
+	$.ajax({
+		method: "POST",
+		url: "aj-edit-comment.test",
+		data: {b_comment:contents, b_idx: bIdx, u_idx:uIdx, c_idx:cIdx, c_date:cDate}
+	})
+	.done(function(data){
+		$('#commentList').html(data);
+	});
+});
 
+$(document).on('click', '.btn_delete_comment', function(){
+	let contents = $(this).parent().parent().prev().find('th').val();
+	let bIdx = $(this).attr('bidx');
+	let uIdx = $(this).attr('uidx');
+	let cIdx = $(this).attr('cidx');
+	
+	$.ajax({
+		method: "POST",
+		url: "aj-delete-comment.test",
+		data: {b_comment:contents, b_idx:bIdx, u_idx:uIdx, c_idx:cIdx}
+	})
+	.done(function(data){
+		$('#commentList').html(data);
+	});
+});
 
 
 </script>

@@ -49,8 +49,15 @@ public class BoardService {
 	public ArrayList<Comment> getCommentList(Board board){
 		return dao.getCommentList(board);
 	}
-	public Comment getComment(Board board) {
-		return dao.getComment(board);
+	public Comment getComment(int c_idx) {
+		return dao.getComment(c_idx);
 	}
 	
+	public int editComment(Comment comment) {
+		return dao.editComment(comment);
+	}
+	
+	public int deleteComment(Comment comment) {
+		return dao.deleteComment(comment);
+	}
 }

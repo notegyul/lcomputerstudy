@@ -309,17 +309,17 @@ public class BoardDAO {
 	
 	
 	//잘못 만든 메서드 ㅋ
-	public Comment getComment(Board board) {
+	public Comment getComment(int c_idx) {
 		Comment comment = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select * from comment where b_idx=?";
-		//where b_idx=?
+		String sql = "select * from comment where c_idx=?";
+		
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, board.getB_idx());
+			pstmt.setInt(1, c_idx);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -345,6 +345,60 @@ public class BoardDAO {
 		return comment;
 	}
 	
+	public int editComment(Comment comment) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql ="update comment set b_comment=?, c_date= now() where c_idx=?";
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, comment.getB_comment());
+			pstmt.setInt(2, comment.getC_idx());
+			result = pstmt.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null ) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return result;
+	}
+	
+	public int deleteComment(Comment comment) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "delete from comment where c_idx=?";
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, comment.getC_idx());
+			result = pstmt.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+		
+	}
 	
 	
 	

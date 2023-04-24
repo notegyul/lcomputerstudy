@@ -366,6 +366,43 @@ public class Controller extends HttpServlet {
 				view = "board/test";
 				break;
 				
+			case "/aj-edit-comment.test":
+				boardService = BoardService.getInstance();
+				session = req.getSession();
+				user = (User) session.getAttribute("user");
+				//
+				board = boardService.getBoard(Integer.parseInt(req.getParameter("b_idx")));
+				
+				comment = new Comment();
+				comment.setB_comment(req.getParameter("b_comment"));
+				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
+				comment.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				comment.setC_idx(Integer.parseInt(req.getParameter("c_idx")));
+				comment.setC_date(req.getParameter("c_date"));
+				boardService.editComment(comment);
+				
+				//
+				cList = boardService.getCommentList(board);
+				req.setAttribute("cList", cList);
+				
+				req.setAttribute("comment", comment);
+				view = "board/test";
+				break;
+				
+			case "aj-delete-comment.test":
+				boardService = BoardService.getInstance();
+				
+				session = req.getSession();
+				user = (User) session.getAttribute("user");
+				
+				
+				comment = new Comment();
+				comment.setC_idx(Integer.parseInt(req.getParameter("c_idx")));
+			
+				boardService.deleteComment(comment);
+				req.setAttribute("comment", comment);
+				view = "board/test";
+				break;
 		}
 		
 		if (isRedirected) {
