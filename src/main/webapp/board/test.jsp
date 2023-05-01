@@ -11,12 +11,12 @@
 	<c:forEach items="${cList}" var="comment">
 		<tr>
 			<td>${comment.b_comment}</td>
-			<td></td>
+			<td>${comment.c_group}</td>
 			<td>${comment.c_date}</td>
 			<td>
 				<button class="btn_comment">댓글</button>
 				<button class="btn_modify_comment" bidx="${comment.b_idx}">수정</button>
-				<button class="btn_delete_comment" cidx="${comment.c_idx}">삭제</button>
+				<button class="btn_delete_comment" bidx="${comment.b_idx}" cidx="${comment.c_idx}">삭제</button>
 			</td>
 		</tr>
 		<tr style="display: none;">
@@ -25,7 +25,7 @@
 			</td>
 				
 			<td>
-				<button class="btn_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" >등록</button>
+				<button class="btn_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" cgroup="${comment.c_group }" corder="${comment.c_order }" cdepth="${comment.c_depth }" >등록</button>
 				<button class="btn_cancel_comment">취소</button>
 			</td>
 		</tr>
@@ -35,7 +35,7 @@
 			</td>
 	
 			<td>
-				<button class="btn_edit_reg_comment" bidx="${comment.b_idx}" uidx="${comment.u_idx}"  cidx="${comment.c_idx}" cdate="${comment.c_date}">등록</button>
+				<button class="btn_edit_reg_comment" bidx="${comment.b_idx}" uidx="${comment.u_idx}"  cidx="${comment.c_idx}" cdate="${comment.c_date}" cgroup="${comment.c_group }" corder="${comment.c_order }" cdepth="${comment.c_depth }" >등록</button>
 				<button class="btn_edit_cancel_comment">취소</button>
 			</td>
 		</tr>

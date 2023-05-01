@@ -51,7 +51,7 @@
 			</td>		
 			<td style="border:none;">
 			
-				<input type="hidden" name="b_group" value="${board.b_group}">
+				
 				<a href="reply.test?b_group=${board.b_group}&b_order=${board.b_order}&b_depth=${board.b_depth}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">답글</a>
 				
 				
@@ -64,9 +64,11 @@
 	<form action="comment.test" name="com" method="post">
 		<input type="hidden" name="u_idx" value="${sessionScope.user.u_idx}">
 		<input type="hidden" name="b_idx" value="${board.b_idx}">
+		
 			
 		<textarea rows="8" cols="20" name="b_comment" placeholder="댓글 입력"></textarea>
 		<br/>
+		
 		<input type=submit value="댓글등록">
 	</form>
 	<br/>
@@ -79,8 +81,9 @@
 			<th>작성일시</th>
 			<th>기능</th>
 		</tr>
+		<!-- 여기 cList는 comment.test에서 content-detail.test?b_idx=~~~로 redirect해서(view.jsp 아님) 그쪽 컨트롤러에서 cList 이름으로 setAttribute 한 거임 -->
 		<c:forEach items="${cList}" var="comment">
-			<tr>
+			<tr bidx="${comment.b_idx}">
 				<td>${comment.b_comment}</td>
 				<td></td>
 				<td>${comment.c_date}</td>
@@ -90,17 +93,18 @@
 					<button class="btn_delete_comment" bidx="${comment.b_idx}" uidx="${comment.u_idx}" cidx="${comment.c_idx}">삭제</button>
 				</td>
 			</tr>
+			<!-- 답댓글  -->
 			<tr style="display: none;">
 				<td colspan="3">
 					<textarea rows="2" cols="80"></textarea>
 				</td>
 					
 				<td>
-					
-					<button class="btn_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" >등록</button>
+					<button class="btn_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" cgroup="${comment.c_group }" corder="${comment.c_order }" cdepth="${comment.c_depth }" >등록</button>
 					<button class="btn_cancel_comment">취소</button>
 				</td>
 			</tr>
+			<!-- 댓글 수정  -->
 			<tr style="display: none;">
 				<td colspan="3">
 					<textarea rows="2" cols="80">${comment.b_comment}</textarea>
@@ -108,7 +112,7 @@
 
 				<td>
 					<button class="btn_edit_reg_comment" bidx="${comment.b_idx}" uidx="${comment.u_idx}" cidx="${comment.c_idx}" cdate="${comment.c_date}">등록</button>
-					<button class="btn_edit_cancel_comment">취소</button>
+					<button class="btn_cancel_comment">취소</button>
 				</td>
 			</tr>
 		</c:forEach>	
@@ -121,12 +125,15 @@ $(document).on('click', '.btn_reg_comment', function () {
 	//let cIdx = $(this).attr('cidx');
 	let bIdx = $(this).attr('bidx');
 	let uIdx = $(this).attr('uidx');
+	let cGroup = $(this).attr('cgroup');
+	let cOrder = $(this).attr('corder');
+	let cDepth = $(this).attr('cdepth');
 	
 	
 	$.ajax({
 		method: "POST",
 		url: "aj-write-comment.test",
-		data: { b_comment: contents,  b_idx: bIdx, u_idx:uIdx }
+		data: { b_comment: contents,  b_idx: bIdx, u_idx:uIdx, c_group:cGroup, c_order:cOrder, c_depth:cDepth }
 	})
 	.done(function( data ) {
 		$('#commentList').html(data);
@@ -165,19 +172,41 @@ $(document).on('click', '.btn_edit_reg_comment', function(){
 });
 
 $(document).on('click', '.btn_delete_comment', function(){
-	let contents = $(this).parent().parent().prev().find('th').val();
-	let bIdx = $(this).attr('bidx');
+	
+	let contents = $(this).parent().parent().prev().find('th').text();
+	
 	let uIdx = $(this).attr('uidx');
+
+	let bIdx = $(this).attr('bidx');
 	let cIdx = $(this).attr('cidx');
 	
 	$.ajax({
 		method: "POST",
 		url: "aj-delete-comment.test",
-		data: {b_comment:contents, b_idx:bIdx, u_idx:uIdx, c_idx:cIdx}
+		data: {c_idx:cIdx,b_idx:bIdx,u_idx:uIdx,b_comment:contents}
 	})
 	.done(function(data){
 		$('#commentList').html(data);
 	});
+});
+<!--reComment BTN -->
+$(document).on('click','.btn_re_reg_comment', function(){
+	let contents = $(this).parent().prev().find('textarea').val();
+	let bIdx = $(this).attr('bidx');
+	let uIdx = $(this).attr('uidx');
+	let cGroup = $(this).attr('cgroup');
+	let cOrder = $(this).attr('corder');
+	let cDepth = $(this).attr('cdepth');
+	
+	$.ajax({
+		method: "POST",
+		url: "aj-re-comment.test",
+		data: {b_comment:contents, b_idx:bIdx, u_idx:uIdx, c_group:cGroup, c_order:cOrder, c_depth:cDepth}
+	})
+	.done(function(data){
+		$('#commentList').html(data);
+	});
+	
 });
 
 

@@ -270,6 +270,8 @@ public class Controller extends HttpServlet {
 				idx = req.getParameter("b_idx");
 				board = boardService.getBoard(Integer.parseInt(idx));
 				
+				
+				
 				view = "board/edit";
 				req.setAttribute("board", board);
 				break;
@@ -336,6 +338,7 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				session = req.getSession();
 				user = (User) session.getAttribute("user");
+				 
 				Comment comment = new Comment();
 				
 				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
@@ -344,7 +347,6 @@ public class Controller extends HttpServlet {
 				boardService.commentTo(comment);
 				
 
-				
 				view = "content-detail.test?b_idx=" + req.getParameter("b_idx");
 				isRedirected = true;
 				
@@ -355,14 +357,19 @@ public class Controller extends HttpServlet {
 				session = req.getSession();
 				user = (User) session.getAttribute("user");
 				board = boardService.getBoard(Integer.parseInt(req.getParameter("b_idx")));
+				
 				comment = new Comment();
 				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
 				comment.setB_comment(req.getParameter("b_comment"));
 				comment.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				
+				
 				boardService.commentTo(comment);
 				cList = boardService.getCommentList(board);
+				
 				req.setAttribute("cList", cList);
 				req.setAttribute("comment", comment);
+				
 				view = "board/test";
 				break;
 				
@@ -389,17 +396,47 @@ public class Controller extends HttpServlet {
 				view = "board/test";
 				break;
 				
-			case "aj-delete-comment.test":
+			case "/aj-delete-comment.test":
 				boardService = BoardService.getInstance();
 				
 				session = req.getSession();
 				user = (User) session.getAttribute("user");
 				
+				int c_idx = Integer.parseInt(req.getParameter("c_idx"));
+				boardService.deleteComment(c_idx);
+				
+				comment = boardService.getComment(c_idx);
+				req.setAttribute("comment", comment);
+						
+				board = boardService.getBoard(Integer.parseInt(req.getParameter("b_idx")));
+				cList = boardService.getCommentList(board);
+				req.setAttribute("cList", cList);
+				
+				view = "board/test";
+				
+				
+				break;
+				
+			case "aj-re-comment.test":
+				boardService = BoardService.getInstance();
+				session = req.getSession();
+				user = (User) session.getAttribute("user");
+				
+				board = boardService.getBoard(Integer.parseInt(req.getParameter("b_idx")));
 				
 				comment = new Comment();
-				comment.setC_idx(Integer.parseInt(req.getParameter("c_idx")));
-			
-				boardService.deleteComment(comment);
+				comment.setB_comment(req.getParameter("b_comment"));
+				comment.setC_group(Integer.parseInt(req.getParameter("c_group")));
+				comment.setC_order(Integer.parseInt(req.getParameter("c_order"))+1);
+				comment.setC_depth(Integer.parseInt(req.getParameter("c_depth"))+1);
+				comment.setU_idx(user.getU_idx());
+				comment.setB_idx(board.getB_idx());
+				
+				boardService.reComment(comment);
+				
+				cList = boardService.getCommentList(board);
+				req.setAttribute("cList", cList);
+				
 				req.setAttribute("comment", comment);
 				view = "board/test";
 				break;

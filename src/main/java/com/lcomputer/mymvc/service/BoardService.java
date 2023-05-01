@@ -57,7 +57,11 @@ public class BoardService {
 		return dao.editComment(comment);
 	}
 	
-	public int deleteComment(Comment comment) {
-		return dao.deleteComment(comment);
+	public int deleteComment(int c_idx) {
+		return dao.deleteComment(c_idx);
+	}
+	
+	public int reComment(Comment comment) {
+		return dao.reComment(comment);
 	}
 }

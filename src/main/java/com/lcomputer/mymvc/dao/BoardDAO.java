@@ -240,7 +240,7 @@ public class BoardDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String sql = "insert into comment (b_comment,b_idx,u_idx,c_date) values(?,?,?,now())";
+		String sql = "insert into comment (b_comment,b_idx,u_idx,c_date,c_group,c_order,c_depth) values(?,?,?,now(),1,1,0)";
 		
 		try {
 			conn = DB_Connection.getConnection();
@@ -248,6 +248,13 @@ public class BoardDAO {
 			pstmt.setString(1,comment.getB_comment());
 			pstmt.setInt(2, comment.getB_idx());
 			pstmt.setInt(3, comment.getU_idx());
+			
+			
+			result = pstmt.executeUpdate();
+			
+			pstmt.close();
+			sql = "update comment set c_group=last_insert_id() where c_idx=last_insert_id()";
+			pstmt = conn.prepareStatement(sql);
 			result = pstmt.executeUpdate();
 			
 		}catch(Exception e) {
@@ -270,7 +277,7 @@ public class BoardDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Comment> list = null;
-		String sql = "select * from comment where b_idx = ? order by c_date desc";
+		String sql = "select * from comment where b_idx = ? order by c_group, c_order";
 															
 		try {
 			conn = DB_Connection.getConnection();
@@ -309,7 +316,7 @@ public class BoardDAO {
 	
 	
 	//잘못 만든 메서드 ㅋ
-	public Comment getComment(int c_idx) {
+	public Comment getComment(int cIdx) {
 		Comment comment = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -319,7 +326,7 @@ public class BoardDAO {
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, c_idx);
+			pstmt.setInt(1, cIdx);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -328,6 +335,10 @@ public class BoardDAO {
 				comment.setC_date(rs.getString("c_date"));
 				comment.setB_idx(rs.getInt("b_idx"));
 				comment.setU_idx(rs.getInt("u_idx"));
+				
+				comment.setC_group(rs.getInt("c_group"));
+				comment.setC_order(rs.getInt("c_order"));
+				comment.setC_depth(rs.getInt("c_depth"));
 			}
 			
 		}catch(Exception e) {
@@ -373,7 +384,7 @@ public class BoardDAO {
 		return result;
 	}
 	
-	public int deleteComment(Comment comment) {
+	public int deleteComment(int c_idx) {		//매개변수로 c_idx
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -382,7 +393,7 @@ public class BoardDAO {
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, comment.getC_idx());
+			pstmt.setInt(1, c_idx);		//(1,c_idx)
 			result = pstmt.executeUpdate();
 			
 		}catch(Exception e) {
@@ -398,6 +409,44 @@ public class BoardDAO {
 		
 		return result;
 		
+	}
+	
+	public int reComment(Comment comment) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "insert into comment (b_comment,u_idx,b_idx,c_date,c_group,c_order,c_depth) values (?,?,?,now(),?,?,?)";
+		int result = 0;
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, comment.getB_comment());
+			pstmt.setInt(2, comment.getU_idx());
+			pstmt.setInt(3, comment.getB_idx());
+			pstmt.setInt(4, comment.getC_group());
+			pstmt.setInt(5, comment.getC_order());
+			pstmt.setInt(6, comment.getC_depth());
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			
+			sql = "update comment set c_order = c_order+1 where c_group = ? and c_order >= ? and c_idx != last_insert_id()";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, comment.getC_group());
+			pstmt.setInt(2, comment.getC_order());
+			result = pstmt.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 	
 	
