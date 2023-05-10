@@ -16,6 +16,14 @@ public class Board {
 	private String b_comment;
 	private ArrayList<Comment> comments;
 	
+	private int rownum;
+	
+	public int getRownum() {
+		return rownum;
+	}
+	public void setRownum(int rownum) {
+		this.rownum = rownum;
+	}
 	public ArrayList<Comment> getComments(){
 		return comments;
 	}

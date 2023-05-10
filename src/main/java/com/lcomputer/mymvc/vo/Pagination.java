@@ -9,6 +9,9 @@ public class Pagination {
 	int lastPage;		//(userCount/화면에 표시할 갯수), pagination 마지막 번호
 	int prevPage;		//pagination의 이전 목록
 	int nextPage;		//pagination의 다음 목록
+	Search search;
+	
+	
 	
 	public static final int pageUnit=5;		//한번에 불러올 pagination 수
 	public static final int perPage=3;		//한번에 불러올 userCount 수
@@ -81,14 +84,23 @@ public class Pagination {
 	public void setNextpage(int nextPage) {
 		this.nextPage = nextPage;
 	}
-	
-	
-	
-	
-	
-	
+
+	public Search getSearch() {
+		return search;
+	}
+
+	public void setSearch(Search search) {
+		this.search = search;
+	}
 	
 	
 	
 	
 }
+
+
+
+
+
+
+

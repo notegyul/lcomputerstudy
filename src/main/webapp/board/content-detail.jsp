@@ -81,30 +81,30 @@
 			<th>작성일시</th>
 			<th>기능</th>
 		</tr>
-		<!-- 여기 cList는 comment.test에서 content-detail.test?b_idx=~~~로 redirect해서(view.jsp 아님) 그쪽 컨트롤러에서 cList 이름으로 setAttribute 한 거임 -->
+		<%--여기 cList는 comment.test에서 content-detail.test?b_idx=~~~로 redirect해서(view.jsp 아님) 그쪽 컨트롤러에서 cList 이름으로 setAttribute 한 거임  --%>
 		<c:forEach items="${cList}" var="comment">
 			<tr bidx="${comment.b_idx}">
 				<td>${comment.b_comment}</td>
 				<td></td>
 				<td>${comment.c_date}</td>
 				<td>
-					<button class="btn_comment">댓글</button>
+					<button class="btn_comment" cgroup="${comment.c_group}" corder="${comment.c_order}" cdepth="${c_depth}">댓글</button>
 					<button class="btn_modify_comment">수정</button>
 					<button class="btn_delete_comment" bidx="${comment.b_idx}" uidx="${comment.u_idx}" cidx="${comment.c_idx}">삭제</button>
 				</td>
 			</tr>
-			<!-- 답댓글  -->
+			
 			<tr style="display: none;">
 				<td colspan="3">
 					<textarea rows="2" cols="80"></textarea>
 				</td>
 					
 				<td>
-					<button class="btn_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" cgroup="${comment.c_group }" corder="${comment.c_order }" cdepth="${comment.c_depth }" >등록</button>
+					<button class="btn_re_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" cgroup="${comment.c_group }" corder="${comment.c_order }" cdepth="${comment.c_depth }" >등록</button>
 					<button class="btn_cancel_comment">취소</button>
 				</td>
 			</tr>
-			<!-- 댓글 수정  -->
+			
 			<tr style="display: none;">
 				<td colspan="3">
 					<textarea rows="2" cols="80">${comment.b_comment}</textarea>
@@ -189,7 +189,7 @@ $(document).on('click', '.btn_delete_comment', function(){
 		$('#commentList').html(data);
 	});
 });
-<!--reComment BTN -->
+
 $(document).on('click','.btn_re_reg_comment', function(){
 	let contents = $(this).parent().prev().find('textarea').val();
 	let bIdx = $(this).attr('bidx');

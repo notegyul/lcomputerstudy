@@ -25,7 +25,7 @@
 			</td>
 				
 			<td>
-				<button class="btn_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" cgroup="${comment.c_group }" corder="${comment.c_order }" cdepth="${comment.c_depth }" >등록</button>
+				<button class="btn_re_reg_comment"  bidx="${comment.b_idx}" uidx="${comment.u_idx}" cgroup="${comment.c_group }" corder="${comment.c_order }" cdepth="${comment.c_depth }" >등록</button>
 				<button class="btn_cancel_comment">취소</button>
 			</td>
 		</tr>

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import com.lcomputer.mymvc.database.DB_Connection;
 import com.lcomputer.mymvc.vo.Board;
 import com.lcomputer.mymvc.vo.Comment;
+import com.lcomputer.mymvc.vo.Pagination;
 
 public class BoardDAO {
 
@@ -55,15 +56,16 @@ public class BoardDAO {
 		}
 	}
 	//리스트 
-	public ArrayList<Board> getBoardList(){
+	public ArrayList<Board> getBoardList(Pagination pagination){
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Board> list = null;
-		String sql = "select * from board order by b_group, b_order";
+		String sql = "select * from board where b_title like %?% order by b_group desc, b_order asc";
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
+			// 물음표 설정 where b_title like ?
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();
 			
@@ -296,6 +298,10 @@ public class BoardDAO {
 				comment.setB_idx(rs.getInt("b_idx"));
 				comment.setU_idx(rs.getInt("u_idx"));
 				comment.setC_date(rs.getString("c_date"));
+				comment.setC_group(rs.getInt("c_group"));
+				comment.setC_order(rs.getInt("c_order"));
+				comment.setC_depth(rs.getInt("c_depth"));
+				//페이지에 리스트 뿌릴 대 g,o,d 필요. 여기서 같이 넘겨주
 				list.add(comment);
 			
 			}

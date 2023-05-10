@@ -16,6 +16,7 @@ import com.lcomputer.mymvc.service.UserService;
 import com.lcomputer.mymvc.vo.Board;
 import com.lcomputer.mymvc.vo.Comment;
 import com.lcomputer.mymvc.vo.Pagination;
+import com.lcomputer.mymvc.vo.Search;
 import com.lcomputer.mymvc.vo.User;
 
 @WebServlet("*.test")
@@ -71,6 +72,7 @@ public class Controller extends HttpServlet {
 		String num;
 		HttpSession session = null;
 		String pw = null;
+		Search search = null;
 		command = checkSession(req,res,command);
 		
 		boolean isRedirected = false;
@@ -245,8 +247,17 @@ public class Controller extends HttpServlet {
 				break;
 				
 			case "/title-list.test":
+				search = new Search();
+				search.setType(req.getParameter("search"));		//셀렉트 박스
+				search.setKeyword(req.getParameter("keyword"));		//검색한 내용
+				
+				req.setAttribute("search", search);				//필요 or 불필요 ?
+				
+				pagination = new Pagination();
+				pagination.setSearch(search);
+				
 				boardService = BoardService.getInstance();
-				ArrayList<Board> bList = boardService.getBoardList();
+				ArrayList<Board> bList = boardService.getBoardList(pagination);
 				view = "board/b-list";
 				req.setAttribute("bList", bList);
 				break;
@@ -362,6 +373,9 @@ public class Controller extends HttpServlet {
 				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
 				comment.setB_comment(req.getParameter("b_comment"));
 				comment.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				comment.setC_group(Integer.parseInt(req.getParameter("c_group")));
+				comment.setC_order(Integer.parseInt(req.getParameter("c_order")));
+				comment.setC_depth(Integer.parseInt(req.getParameter("c_depth")));
 				
 				
 				boardService.commentTo(comment);
@@ -417,7 +431,7 @@ public class Controller extends HttpServlet {
 				
 				break;
 				
-			case "aj-re-comment.test":
+			case "/aj-re-comment.test":
 				boardService = BoardService.getInstance();
 				session = req.getSession();
 				user = (User) session.getAttribute("user");
@@ -425,12 +439,18 @@ public class Controller extends HttpServlet {
 				board = boardService.getBoard(Integer.parseInt(req.getParameter("b_idx")));
 				
 				comment = new Comment();
+				
+				comment.setB_idx(Integer.parseInt(req.getParameter("b_idx")));
+				
+				comment.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				
 				comment.setB_comment(req.getParameter("b_comment"));
 				comment.setC_group(Integer.parseInt(req.getParameter("c_group")));
 				comment.setC_order(Integer.parseInt(req.getParameter("c_order"))+1);
 				comment.setC_depth(Integer.parseInt(req.getParameter("c_depth"))+1);
 				comment.setU_idx(user.getU_idx());
 				comment.setB_idx(board.getB_idx());
+				
 				
 				boardService.reComment(comment);
 				

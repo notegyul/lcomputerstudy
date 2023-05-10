@@ -1,0 +1,36 @@
+<div>
+		<ul>
+			<c:choose>
+				<%--${pagination.startPage > Pagination.pageUnit } --%>
+				<c:when test="${pagination.prevPage <= pagination.startPage && pagination.prevPage > 0}">
+					<li style="">
+						<a href="title-list.test?page=${pagination.prevPage}">
+							◀
+						</a>
+					</li>
+				</c:when>
+			</c:choose>
+			<c:forEach var="i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
+				
+				<c:choose>
+					<c:when test="${pagination.page == i}">
+						<li style="background-color:#ededed;">
+							<span>${i}</span>
+						</li>
+					</c:when>
+					<c:when test="${pagination.page != i}">
+						<li>
+							<a href="title-list.test?page=${i}">${i}</a>
+						</li>
+					</c:when>
+				</c:choose>
+			</c:forEach>
+			<c:choose>
+				<c:when test="${ pagination.nextPage <= pagination.lastPage }">
+					<li style="">
+						<a href="title-list.test?page=${ pagination.nextPage }">▶</a>
+					</li>
+				</c:when>
+			</c:choose>
+		</ul>
+	</div>

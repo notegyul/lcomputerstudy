@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.lcomputer.mymvc.dao.BoardDAO;
 import com.lcomputer.mymvc.vo.Board;
 import com.lcomputer.mymvc.vo.Comment;
+import com.lcomputer.mymvc.vo.Pagination;
 
 public class BoardService {
 
@@ -24,8 +25,8 @@ public class BoardService {
 	public void regist(Board board) {
 		dao.regist(board);
 	}
-	public ArrayList<Board> getBoardList(){
-		return dao.getBoardList();
+	public ArrayList<Board> getBoardList(Pagination pagination){
+		return dao.getBoardList(pagination);
 	}
 	public Board getBoard(int idx) {
 		return dao.getBoard(idx);

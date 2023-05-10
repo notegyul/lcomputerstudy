@@ -36,7 +36,23 @@
 			</c:forEach>
 			
 		</table>
-	
+		
+		
+		
+		
+		
+		<br/>
+		
+		<form action="title-list.test" method="get">
+			<select name="search">
+			<option>검색</option>
+			<option value="제목">제목</option>
+			<option value="제목+내용">제목+내용</option>
+			<option value="작성자">작성자</option>
+			</select>
+			<input type="text" name="keyword">
+			<input type="submit" value="검색하기">
+		</form>
 	
 	
 	
