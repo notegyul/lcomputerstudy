@@ -8,8 +8,13 @@
 <title>게시글 목록</title>
 </head>
 <style>
-	table {
+	table, div {
 		boarder-collapse:collapse;
+		margin:40px auto;
+	}
+	
+	div {
+		
 	}
 	table tr td {
 		font-weight:700;
@@ -18,6 +23,31 @@
 		border:1px solid #818181;
 		width:200px;
 		text-align:center;
+	}
+	
+	a {
+		text-decoration:none;
+		color:#000;
+		font-weigth:700;
+	}
+	h1 {
+		text-align:center;
+	}
+	
+	ul{
+		width:400px;
+		height:50px;
+		margin:10px auto;
+	}
+	li{
+		list-style:none;
+		width:50px;
+		line-height:50px;
+		border:1px solid #ededed;
+		float:left;
+		text-align:center;
+		margin:0 5px;
+		border-radius:5px;
 	}
 </style>
 
@@ -38,22 +68,61 @@
 		</table>
 		
 		
+		<div>
+			<ul>
+				<c:choose>
+					<%--${pagination.startPage > Pagination.pageUnit } --%>
+					<c:when test="${pagination.prevPage <= pagination.startPage && pagination.prevPage > 0}">
+						<li style="">
+							<a href="title-list.test?page=${pagination.prevPage}">
+								◀
+							</a>
+						</li>
+					</c:when>
+				</c:choose>
+				<c:forEach var="i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
+					
+					<c:choose>
+						<c:when test="${pagination.page == i}">
+							<li style="background-color:#ededed;">
+								<span>${i}</span>
+							</li>
+						</c:when>
+						<c:when test="${pagination.page != i}">
+							<li>
+								<a href="title-list.test?page=${i}">${i}</a>
+							</li>
+						</c:when>
+					</c:choose>
+				</c:forEach>
+				<c:choose>
+					<c:when test="${ pagination.nextPage <= pagination.lastPage }">
+						<li style="">
+							<a href="title-list.test?page=${ pagination.nextPage }">▶</a>
+						</li>
+					</c:when>
+				</c:choose>
+			</ul>
+		</div>
+		
+		
 		
 		
 		
 		<br/>
 		
-		<form action="title-list.test" method="get">
-			<select name="search">
-			<option>검색</option>
-			<option value="제목">제목</option>
-			<option value="제목+내용">제목+내용</option>
-			<option value="작성자">작성자</option>
-			</select>
-			<input type="text" name="keyword">
-			<input type="submit" value="검색하기">
-		</form>
-	
+		<div>	
+			<form action="title-list.test" method="get">
+				<select name="search">
+				<option>검색</option>
+				<option value="제목">제목</option>
+				<option value="제목+내용">제목+내용</option>
+				<option value="작성자">작성자</option>
+				</select>
+				<input type="text" name="keyword">
+				<input type="submit" value="검색하기">
+			</form>
+		</div>
 	
 	
 	

@@ -53,6 +53,7 @@ public class UserDAO {
 		}
 	}
 	
+	//user-list
 	public ArrayList<User> getUsers(Pagination pagination){
 		Connection conn = null;
 		PreparedStatement pstmt = null;

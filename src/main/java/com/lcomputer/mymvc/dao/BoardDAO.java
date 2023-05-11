@@ -10,6 +10,8 @@ import com.lcomputer.mymvc.database.DB_Connection;
 import com.lcomputer.mymvc.vo.Board;
 import com.lcomputer.mymvc.vo.Comment;
 import com.lcomputer.mymvc.vo.Pagination;
+import com.lcomputer.mymvc.vo.Search;
+import com.lcomputer.mymvc.vo.User;
 
 public class BoardDAO {
 
@@ -57,15 +59,97 @@ public class BoardDAO {
 	}
 	//리스트 
 	public ArrayList<Board> getBoardList(Pagination pagination){
+		
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Board> list = null;
-		String sql = "select * from board where b_title like %?% order by b_group desc, b_order asc";
+		int pageNum = pagination.getPageNum();
+		String query = null;
+		
+		Search search = null;
+		
 		try {
 			conn = DB_Connection.getConnection();
+			
+			search = pagination.getSearch();
+			
+			switch(search.getType()) {
+				case "제목":
+					
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			if(search.getKeyword() != null) {
+				
+				query = "select * from board where b_title like ? order by b_group desc, b_order asc limit ?,?";		
+				
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, "%"+search.getKeyword()+"%");
+				pstmt.setInt(2,pageNum);
+				pstmt.setInt(3, Pagination.perPage);
+			}else {
+				query = "select * from board order by b_group desc, b_order asc limit ?,?";
+				pstmt = conn.prepareStatement(query);
+				
+				pstmt.setInt(1,pageNum);
+				pstmt.setInt(2, Pagination.perPage);
+			}
+			
+			
+			rs = pstmt.executeQuery();
+			list = new ArrayList<>();
+			
+			
+			while(rs.next()) {
+				Board board = new Board();
+				board.setB_idx(rs.getInt("b_idx"));
+				board.setB_title(rs.getString("b_title"));
+				board.setB_content(rs.getString("b_content"));
+				board.setB_date(rs.getString("b_date"));
+				board.setB_writer(rs.getString("b_writer"));
+				board.setB_count(rs.getInt("b_count"));
+				
+				board.setB_group(rs.getInt("b_group"));
+				board.setB_order(rs.getInt("b_order"));
+				board.setB_depth(rs.getInt("b_depth"));
+				list.add(board);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null)rs.close();
+				if(pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+		
+		//pagination 전 코드
+		/*Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Search search = null;
+		ArrayList<Board> list = null;
+		String sql = "select * from board order by b_group desc, b_order asc";
+		try {
+			
+			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			// 물음표 설정 where b_title like ?
+			
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();
 			
@@ -87,15 +171,52 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				rs.close();
-				pstmt.close();
-				conn.close();
+				if(rs!= null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
 			}catch(SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		
 		return list;
+		
+		*/
+	}
+	
+	//list count
+	
+	public int getBoardsCount() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "select count(*) count from board ";
+		int count = 0;
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				count = rs.getInt("count");
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
+	
 	}
 	
 	//리스트 클릭 -> 게시글 상세 
@@ -454,6 +575,8 @@ public class BoardDAO {
 		
 		return result;
 	}
+	
+	
 	
 	
 	

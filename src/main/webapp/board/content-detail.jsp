@@ -50,11 +50,11 @@
 				</form>
 			</td>		
 			<td style="border:none;">
-			
-				
 				<a href="reply.test?b_group=${board.b_group}&b_order=${board.b_order}&b_depth=${board.b_depth}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">답글</a>
-				
-				
+			</td>
+			
+			<td style="border:none;">
+				<a href="title-list.test" style="width:70%;font-weight:700;background-color:brown;color:#fff;">글 목록</a>
 			</td>	
 		</tr>
 		

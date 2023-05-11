@@ -24,3 +24,65 @@ getBoardList() -> 매개변수로 pagination 넘겨주도록 수정(pagination�
 에서 
 pstmt.setString(1,"???");
 뭘로 설정하냐  -> getBoardList() 매개변수 pagination으로 변경해서 매개변수로 설정하면 어떰
+
+
+getBoardList() 에서 지운 코드(불필요)
+--->
+
+			/*
+			String query = new StringBuilder()
+					.append("select 	@rownum := @rownum -1 as rownum,\n")
+					.append("           ta.*\n")
+					.append("from       board ta,\n")
+					.append("           (select @rownum := (select count(*)-?+1 from board ta)) tb\n")
+					.append("limit      ?, ?\n")
+					.toString();
+			*/
+			//pstmt.setInt(2, pageNum);
+			//pstmt.setInt(3, Pagination.perPage);
+			
+			
+			
+			
+			
+<<키워드 미입력 시 리스트 나오지 않는 문제 해결 중// 문제 코드(아래)>>	해결 완료 (if문 사용)				
+			
+try {
+			conn = DB_Connection.getConnection();
+			String query = "select * from board where b_title like ? order by b_group desc, b_order asc limit ?,?";		
+			search = pagination.getSearch();
+			
+			
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "%"+search.getKeyword()+"%");
+			pstmt.setInt(2,pageNum);
+			pstmt.setInt(3, Pagination.perPage);
+			
+			rs = pstmt.executeQuery();
+			list = new ArrayList<>();
+			
+			
+			while(rs.next()) {
+				Board board = new Board();
+				board.setB_idx(rs.getInt("b_idx"));
+				board.setB_title(rs.getString("b_title"));
+				board.setB_content(rs.getString("b_content"));
+				board.setB_date(rs.getString("b_date"));
+				board.setB_writer(rs.getString("b_writer"));
+				board.setB_count(rs.getInt("b_count"));
+				
+				board.setB_group(rs.getInt("b_group"));
+				board.setB_order(rs.getInt("b_order"));
+				board.setB_depth(rs.getInt("b_depth"));
+				list.add(board);
+			}
+			
+		}catch(Exception e) 
+		
+		
+		
+0511 com
+검색 카테고리 -> 스위치 문, 배열? 
+ex) 배열 1번에 제목 저장 -> switch array == 1: 어쩌고
+시도 1. getBoardList from DAO 에서 switch 작성 / how? switch(search.getType()) case "제목":

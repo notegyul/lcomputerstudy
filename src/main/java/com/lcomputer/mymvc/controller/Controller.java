@@ -247,11 +247,11 @@ public class Controller extends HttpServlet {
 				break;
 				
 			case "/title-list.test":
+				
+				/*
 				search = new Search();
 				search.setType(req.getParameter("search"));		//셀렉트 박스
 				search.setKeyword(req.getParameter("keyword"));		//검색한 내용
-				
-				req.setAttribute("search", search);				//필요 or 불필요 ?
 				
 				pagination = new Pagination();
 				pagination.setSearch(search);
@@ -261,6 +261,65 @@ public class Controller extends HttpServlet {
 				view = "board/b-list";
 				req.setAttribute("bList", bList);
 				break;
+				
+				*/ //원래 코드(위)
+				
+				boardService = BoardService.getInstance();
+				
+				
+				
+				search = new Search();
+				search.setType(req.getParameter("search"));
+				search.setKeyword(req.getParameter("keyword"));
+				
+				reqPage = req.getParameter("page");
+				if(reqPage != null) {
+					page = Integer.parseInt(reqPage);
+				}
+				
+				count = boardService.getBoardsCount();
+				
+				pagination = new Pagination();
+				pagination.setSearch(search);	
+				pagination.setCount(count);
+				pagination.setPage(page);
+				pagination.init();
+				
+				ArrayList<Board> bList = boardService.getBoardList(pagination);
+				req.setAttribute("bList", bList);
+				req.setAttribute("pagination", pagination);
+				
+				view = "board/b-list";
+				break;
+				
+				
+				
+				/* 참고(아래)
+				 
+				String reqPage = req.getParameter("page");
+				if(reqPage != null) {
+					page = Integer.parseInt(reqPage);
+					
+				}
+				userService = UserService.getInstance();
+				count = userService.getUsersCount();
+				
+				Pagination pagination = new Pagination();
+				pagination.setCount(count);
+				pagination.setPage(page);
+				pagination.init();
+				
+				ArrayList<User> list = userService.getUsers(pagination);
+				
+				
+				req.setAttribute("list", list);
+				req.setAttribute("pagination", pagination);
+				
+				view = "myuser/list";
+				break;
+				
+				*/
+				
 				
 			case "/content-detail.test":
 				boardService = BoardService.getInstance();

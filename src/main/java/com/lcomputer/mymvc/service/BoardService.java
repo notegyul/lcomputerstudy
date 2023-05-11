@@ -28,6 +28,10 @@ public class BoardService {
 	public ArrayList<Board> getBoardList(Pagination pagination){
 		return dao.getBoardList(pagination);
 	}
+	
+	public int getBoardsCount() {
+		return dao.getBoardsCount();
+	}
 	public Board getBoard(int idx) {
 		return dao.getBoard(idx);
 	}
