@@ -67,17 +67,38 @@ public class BoardDAO {
 		ArrayList<Board> list = null;
 		int pageNum = pagination.getPageNum();
 		String query = null;
-		
 		Search search = null;
+		String[] searchArr = null;
+		
 		
 		try {
 			conn = DB_Connection.getConnection();
 			
 			search = pagination.getSearch();
+			searchArr = search.getSearchArr();
 			
-			switch(search.getType()) {
-				case "제목":
-					
+			for(int i=0; i<searchArr.length; i++) {
+				switch(i) {
+					case 0:
+						if(search.getKeyword() != null) {
+							
+							query = "select * from board where b_title like ? order by b_group desc, b_order asc limit ?,?";		
+							
+							pstmt = conn.prepareStatement(query);
+							pstmt.setString(1, "%"+search.getKeyword()+"%");
+							pstmt.setInt(2,pageNum);
+							pstmt.setInt(3, Pagination.perPage);
+						}else {
+							query = "select * from board order by b_group desc, b_order asc limit ?,?";
+							pstmt = conn.prepareStatement(query);
+							
+							pstmt.setInt(1,pageNum);
+							pstmt.setInt(2, Pagination.perPage);
+						}
+						
+						break;
+						
+				}
 			}
 			
 			
@@ -88,6 +109,9 @@ public class BoardDAO {
 			
 			
 			
+			/*
+			 * 카테고리 적용 전 only keyword
+			 * 
 			if(search.getKeyword() != null) {
 				
 				query = "select * from board where b_title like ? order by b_group desc, b_order asc limit ?,?";		
@@ -104,6 +128,7 @@ public class BoardDAO {
 				pstmt.setInt(2, Pagination.perPage);
 			}
 			
+			*/
 			
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();

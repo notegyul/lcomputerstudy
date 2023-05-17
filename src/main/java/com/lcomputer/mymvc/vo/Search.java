@@ -3,7 +3,14 @@ package com.lcomputer.mymvc.vo;
 public class Search {
 	private String type;
 	private String keyword;
+	private String[] searchArr;
 	
+	public String[] getSearchArr() {
+		return searchArr;
+	}
+	public void setSearchArr(String[] searchArr) {
+		this.searchArr = searchArr;
+	}
 	public String getType() {
 		return type;
 	}

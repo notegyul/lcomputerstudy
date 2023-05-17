@@ -271,6 +271,7 @@ public class Controller extends HttpServlet {
 				search = new Search();
 				search.setType(req.getParameter("search"));
 				search.setKeyword(req.getParameter("keyword"));
+				search.setSearchArr(req.getParameterValues("search"));
 				
 				reqPage = req.getParameter("page");
 				if(reqPage != null) {
