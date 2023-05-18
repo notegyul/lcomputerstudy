@@ -66,69 +66,77 @@ public class BoardDAO {
 		ResultSet rs = null;
 		ArrayList<Board> list = null;
 		int pageNum = pagination.getPageNum();
-		String query = null;
-		Search search = null;
-		String[] searchArr = null;
 		
+		Search search = pagination.getSearch();
+		String query = null;
+		String where = "";
+		
+		
+		if (search.getKeyword() != null) {
+			where += "where ";
+			
+			switch (search.getType()) {
+				//제목	
+				case "1":
+					where += " b_title like ? ";
+					break;
+				//제목 + 내용	
+				case "2":
+					where += " b_title like ? or b_content like ? ";
+					break;
+				//작성자	
+				case "3":
+					where += " b_writer like ? ";
+					break;
+				case "0":
+					where += "  b_title like ? or b_content like ? or b_writer like ? ";
+					break;
+			}
+		}
 		
 		try {
 			conn = DB_Connection.getConnection();
-			
-			search = pagination.getSearch();
-			searchArr = search.getSearchArr();
-			
-			for(int i=0; i<searchArr.length; i++) {
-				switch(i) {
-					case 0:
-						if(search.getKeyword() != null) {
-							
-							query = "select * from board where b_title like ? order by b_group desc, b_order asc limit ?,?";		
-							
-							pstmt = conn.prepareStatement(query);
-							pstmt.setString(1, "%"+search.getKeyword()+"%");
-							pstmt.setInt(2,pageNum);
-							pstmt.setInt(3, Pagination.perPage);
-						}else {
-							query = "select * from board order by b_group desc, b_order asc limit ?,?";
-							pstmt = conn.prepareStatement(query);
-							
-							pstmt.setInt(1,pageNum);
-							pstmt.setInt(2, Pagination.perPage);
-						}
-						
-						break;
-						
-				}
-			}
+			query = "select * from board "
+					+ where	
+					+ "order by b_group desc, b_order asc " 
+					+ "limit ?,?";
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			/*
-			 * 카테고리 적용 전 only keyword
-			 * 
+			pstmt = conn.prepareStatement(query);
 			if(search.getKeyword() != null) {
-				
-				query = "select * from board where b_title like ? order by b_group desc, b_order asc limit ?,?";		
-				
-				pstmt = conn.prepareStatement(query);
-				pstmt.setString(1, "%"+search.getKeyword()+"%");
-				pstmt.setInt(2,pageNum);
-				pstmt.setInt(3, Pagination.perPage);
+				switch(search.getType()) {
+					case "1": 
+					case "3":
+						
+						pstmt.setString(1, "%"+search.getKeyword()+"%");
+						pstmt.setInt(2,pageNum);
+						pstmt.setInt(3, Pagination.perPage);
+						break;
+					case "2":
+						
+						pstmt.setString(1, "%"+search.getKeyword()+"%");
+						pstmt.setString(2, "%"+search.getKeyword()+"%");
+						pstmt.setInt(3,pageNum);
+						pstmt.setInt(4, Pagination.perPage);
+						break;
+					case "0":
+						pstmt.setString(1, "%"+search.getKeyword()+"%");
+						pstmt.setString(2, "%"+search.getKeyword()+"%");
+						pstmt.setString(3, "%"+search.getKeyword()+"%");
+						pstmt.setInt(4,pageNum);
+						pstmt.setInt(5, Pagination.perPage);
+						break;
+				}
 			}else {
-				query = "select * from board order by b_group desc, b_order asc limit ?,?";
-				pstmt = conn.prepareStatement(query);
 				
 				pstmt.setInt(1,pageNum);
 				pstmt.setInt(2, Pagination.perPage);
+				
 			}
 			
-			*/
+				
+				
+			
 			
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();

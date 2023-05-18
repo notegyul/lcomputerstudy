@@ -80,9 +80,43 @@ try {
 			
 		}catch(Exception e) 
 		
-		
+//query = "select * from board where b_title like ? order by b_group desc, b_order asc limit ?,?";
 		
 0511 com
 검색 카테고리 -> 스위치 문, 배열? 
 ex) 배열 1번에 제목 저장 -> switch array == 1: 어쩌고
 시도 1. getBoardList from DAO 에서 switch 작성 / how? switch(search.getType()) case "제목":
+
+5.18
+일차 검색 시 제대로 나오지만 페이지 넘기면 (1 -> 2) ?search=1&keyword=sle 가  날아감 --> ?page=2
+
+
+BoardDAO - getBoardList(Pagination pagination)
+:::::::
+/*
+			 * 카테고리 적용 전 only keyword
+			 * 
+			if(search.getKeyword() != null) {
+				
+				query = "select * from board where b_title like ? order by b_group desc, b_order asc limit ?,?";		
+				
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, "%"+search.getKeyword()+"%");
+				pstmt.setInt(2,pageNum);
+				pstmt.setInt(3, Pagination.perPage);
+			}else {
+				query = "select * from board order by b_group desc, b_order asc limit ?,?";
+				pstmt = conn.prepareStatement(query);
+				
+				pstmt.setInt(1,pageNum);
+				pstmt.setInt(2, Pagination.perPage);
+			}
+			
+			*/
+:::::::
+
+1)pagination - getBoardsCount(Search search)  :: search한 것에 대한 count만 가져오도록 메서드 수정
+2)search.getKeyword()가 null은 아니지만, case 1,2,3에 없는 type이 넘어왔을 때 pstmt 실행 문제
+
+
+

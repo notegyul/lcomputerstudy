@@ -271,14 +271,14 @@ public class Controller extends HttpServlet {
 				search = new Search();
 				search.setType(req.getParameter("search"));
 				search.setKeyword(req.getParameter("keyword"));
-				search.setSearchArr(req.getParameterValues("search"));
+				
 				
 				reqPage = req.getParameter("page");
 				if(reqPage != null) {
 					page = Integer.parseInt(reqPage);
 				}
 				
-				count = boardService.getBoardsCount();
+				count = boardService.getBoardsCount();		//매개변수 search (5.18com)
 				
 				pagination = new Pagination();
 				pagination.setSearch(search);	

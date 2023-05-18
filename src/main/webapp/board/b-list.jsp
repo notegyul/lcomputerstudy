@@ -90,7 +90,7 @@
 						</c:when>
 						<c:when test="${pagination.page != i}">
 							<li>
-								<a href="title-list.test?page=${i}">${i}</a>
+								<a href="title-list.test?page=${i}&search=${pagination.search.type}&keyword=${pagination.search.keyword}">${i}</a>
 							</li>
 						</c:when>
 					</c:choose>
@@ -114,10 +114,10 @@
 		<div>	
 			<form action="title-list.test" method="get">
 				<select name="search">
-					<option value="검색">검색</option>
-					<option value="제목">제목</option>
-					<option value="제목+내용">제목+내용</option>
-					<option value="작성자">작성자</option>
+					<option value="0">검색</option>
+					<option value="1">제목</option>
+					<option value="2">제목+내용</option>
+					<option value="3">작성자</option>
 				</select>
 				<input type="text" name="keyword">
 				<input type="submit" value="검색하기">
