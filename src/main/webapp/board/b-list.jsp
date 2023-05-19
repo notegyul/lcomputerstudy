@@ -35,7 +35,7 @@
 	}
 	
 	ul{
-		width:400px;
+		width:500px;
 		height:50px;
 		margin:10px auto;
 	}
@@ -90,7 +90,7 @@
 						</c:when>
 						<c:when test="${pagination.page != i}">
 							<li>
-								<a href="title-list.test?page=${i}&search=${pagination.search.type}&keyword=${pagination.search.keyword}">${i}</a>
+								<a href="title-list.test?page=${i}&type=${pagination.search.type}&keyword=${pagination.search.keyword}">${i}</a>
 							</li>
 						</c:when>
 					</c:choose>
@@ -113,7 +113,7 @@
 		
 		<div>	
 			<form action="title-list.test" method="get">
-				<select name="search">
+				<select name="type">
 					<option value="0">검색</option>
 					<option value="1">제목</option>
 					<option value="2">제목+내용</option>

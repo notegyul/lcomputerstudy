@@ -6,6 +6,7 @@ import com.lcomputer.mymvc.dao.BoardDAO;
 import com.lcomputer.mymvc.vo.Board;
 import com.lcomputer.mymvc.vo.Comment;
 import com.lcomputer.mymvc.vo.Pagination;
+import com.lcomputer.mymvc.vo.Search;
 
 public class BoardService {
 
@@ -29,8 +30,8 @@ public class BoardService {
 		return dao.getBoardList(pagination);
 	}
 	
-	public int getBoardsCount() {
-		return dao.getBoardsCount();
+	public int getBoardsCount(Search search) {
+		return dao.getBoardsCount(search);
 	}
 	public Board getBoard(int idx) {
 		return dao.getBoard(idx);

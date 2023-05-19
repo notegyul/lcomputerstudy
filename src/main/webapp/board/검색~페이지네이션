@@ -119,4 +119,75 @@ BoardDAO - getBoardList(Pagination pagination)
 2)search.getKeyword()가 null은 아니지만, case 1,2,3에 없는 type이 넘어왔을 때 pstmt 실행 문제
 
 
+5.19
+::::
+/*
+			if(search.getKeyword() != null) 
+				whe = " where ? like ? ";
+			
+			
+			String sql = "select count(*) count "
+						+"from board"
+						+whe;
+			
+			
+			
+			if(whe != "") { 
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, search.getKeyword());
+				pstmt.setString(2, "%"+search.getKeyword()+"%");
+			}else {
+				
+				pstmt = conn.prepareStatement(sql);
+			}
+			rs = pstmt.executeQuery();
+			
+			*/
+			
+			
+*** or 연산자 || -> 전자 참이면 후자 검사 안 함
 
+:::5.19 getBoardsCount() 수정 전 원래 코드
+1)DAO
+
+public int getBoardsCount(Search search){
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+	String whe = "";
+	String sql = "select count(*) count "
+			+"from board "
+			+ whe;
+	
+	int count = 0;
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				count = rs.getInt("count");
+			}
+			
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
+	
+
+}
+
+5/19
+count가 0 . 쿼리 잘못 짠듯. pagination에 넘어가는 count도 0임

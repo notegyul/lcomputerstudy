@@ -72,7 +72,7 @@ public class BoardDAO {
 		String where = "";
 		
 		
-		if (search.getKeyword() != null) {
+		if (!(search.getKeyword() == null || search.getKeyword().equals(""))) {
 			where += "where ";
 			
 			switch (search.getType()) {
@@ -103,7 +103,7 @@ public class BoardDAO {
 			
 			
 			pstmt = conn.prepareStatement(query);
-			if(search.getKeyword() != null) {
+			if(!(search.getKeyword() == null || search.getKeyword().equals(""))) {
 				switch(search.getType()) {
 					case "1": 
 					case "3":
@@ -133,10 +133,6 @@ public class BoardDAO {
 				pstmt.setInt(2, Pagination.perPage);
 				
 			}
-			
-				
-				
-			
 			
 			rs = pstmt.executeQuery();
 			list = new ArrayList<>();
@@ -219,22 +215,41 @@ public class BoardDAO {
 	
 	//list count
 	
-	public int getBoardsCount() {
+	public int getBoardsCount(Search search) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
-		String sql = "select count(*) count from board ";
+		String whe = "";
 		int count = 0;
+		
+		
+		if(!(search.getKeyword() == null || search.getKeyword().equals(""))) {
+			whe = "where ? like ? or ? like ? or ? like ?";
+		}
+		
+		String sql = "select count(*) count "
+				+"from board "
+				+ whe;
 		
 		try {
 			conn = DB_Connection.getConnection();
-			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);	
+			if(!(whe.equals(""))){
+				pstmt.setString(1, "b_title");
+				pstmt.setString(2, "%"+search.getKeyword()+"%");
+				pstmt.setString(3, "b_content");
+				pstmt.setString(4, "%"+search.getKeyword()+"%");
+				pstmt.setString(5, "b_writer");
+				pstmt.setString(6, "%"+search.getKeyword()+"%");
+			}
+					
 			rs = pstmt.executeQuery();
 			
-			while(rs.next()) {
+			while(rs.next()){
 				count = rs.getInt("count");
 			}
+			
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
