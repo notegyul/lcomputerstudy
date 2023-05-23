@@ -60,7 +60,7 @@
 			</tr>
 			<c:forEach items="${bList}" var="contents">
 				<tr>
-					<td><a href="content-detail.test?b_idx=${contents.b_idx}">${contents.b_title}</a></td>
+					<td><a href="content-detail.test?b_idx=${contents.b_idx}&u_idx=${contents.u_idx}">${contents.b_title}</a></td>
 					<td>${contents.b_date}</td>
 				</tr>
 			</c:forEach>

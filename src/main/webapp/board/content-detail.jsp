@@ -40,15 +40,30 @@
 	
 	<table>
 		<tr style="heigth:50px;">
-			<td style="border:none;">
-				<a href="content-edit.test?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">수정</a>
-			</td>
-			<td style="border:none;">
-				<form method="post">
-					<input type="hidden" name="b_idx" value="${board.b_idx}">
-					<a href="content-delete.test?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;">삭제</a>
-				</form>
-			</td>		
+			<c:set var="auth" value="${board.u_idx}"/>
+			<c:if test="${auth == sessionScope.user.u_idx}">
+				<td style="border:none;">
+					<a href="content-edit.test?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">수정</a>
+				</td>
+			</c:if>
+			
+			<c:set var="auth" value="${board.u_idx}"/>
+			<c:set var="level" value="${user.u_manage}"/>
+			<c:choose>
+				<c:when test="${level == 9}">
+					<td style="border:none;">
+						<input type="hidden" name="b_idx" value="${board.b_idx}">
+						<a href="content-delete.test?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;">삭제</a>
+					</td>
+				</c:when>
+				<c:when test="${auth == sessionScope.user.u_idx}">
+					<td style="border:none;">
+						<input type="hidden" name="b_idx" value="${board.b_idx}">
+						<a href="content-delete.test?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;">삭제</a>
+					</td>
+				</c:when>
+			</c:choose>
+				
 			<td style="border:none;">
 				<a href="reply.test?b_group=${board.b_group}&b_order=${board.b_order}&b_depth=${board.b_depth}" style="width:70%;font-weight:700;background-color:#818181;color:#fff;">답글</a>
 			</td>
@@ -56,6 +71,7 @@
 			<td style="border:none;">
 				<a href="title-list.test" style="width:70%;font-weight:700;background-color:brown;color:#fff;">글 목록</a>
 			</td>	
+			
 		</tr>
 		
 	</table>

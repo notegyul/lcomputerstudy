@@ -340,6 +340,7 @@ public class Controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				idx = req.getParameter("b_idx");
 				board = boardService.getBoard(Integer.parseInt(idx));
+				board.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
 				
 				view = "board/content-detail";
 				req.setAttribute("board", board);

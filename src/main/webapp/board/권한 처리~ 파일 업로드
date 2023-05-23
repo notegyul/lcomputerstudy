@@ -5,3 +5,15 @@ content-detatil에서 session.u_idx랑 board.u_idx 비교해야 하는데 how?
 
 
 choose when(or if) 하는데 session.u_idx == board.u_idx면 수정/삭제 키 보이게 
+
+
+5.23 at home
+<c:set var="auth" value="${board.u_idx}"/>
+<c:set var="level" value="${user.u_manage}"/>
+	<c:if test="${auth == sessionScope.user.u_idx }" />
+	<c:if test="${level == 9}"/>	
+		<td style="border:none;">
+			<input type="hidden" name="b_idx" value="${board.b_idx}">
+			<a href="content-delete.test?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;">삭제</a>
+		</td>
+	

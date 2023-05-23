@@ -146,6 +146,7 @@ public class BoardDAO {
 				board.setB_date(rs.getString("b_date"));
 				board.setB_writer(rs.getString("b_writer"));
 				board.setB_count(rs.getInt("b_count"));
+				board.setU_idx(rs.getInt("u_idx"));
 				
 				board.setB_group(rs.getInt("b_group"));
 				board.setB_order(rs.getInt("b_order"));
