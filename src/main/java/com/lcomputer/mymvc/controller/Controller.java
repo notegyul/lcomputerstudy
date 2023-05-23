@@ -221,6 +221,20 @@ public class Controller extends HttpServlet {
 				break;
 				
 				
+			case "/change-authority.test":
+				userService = UserService.getInstance();
+				
+				user = userService.getUser(Integer.parseInt(req.getParameter("u_idx")));
+				int memberLevel = Integer.parseInt(req.getParameter("u_manage"));
+				user.setU_manage(memberLevel);
+				
+				userService.changeAuthority(user);
+				view = "user-list.test?page=1";
+				
+				isRedirected = true;
+				break;
+				
+				
 			case "/register.test":
 				view = "board/put-on-record";
 				break;
@@ -232,8 +246,8 @@ public class Controller extends HttpServlet {
 				
 				board.setB_title(req.getParameter("title"));
 				board.setB_content(req.getParameter("content"));
-				board.setB_date("20230403");
-				board.setB_writer("test111");
+				//board.setB_date("20230403");
+				board.setB_writer(user.getU_name());
 				board.setB_count(1);
 				board.setU_idx(user.getU_idx());
 				

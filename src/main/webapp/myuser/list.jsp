@@ -49,6 +49,7 @@
 </style>
 
 <body>
+
 <h1>회원 목록</h1>
 	<table>
 		<tr>
@@ -57,13 +58,36 @@
 			<th>NO</th>
 			<th>ID</th>
 			<th>이름</th>
+			<th>권한 변경</th>
 		</tr>
 		<c:forEach items="${list}" var="user" varStatus="status">
 			<tr>
 				<td><a href="user-detail.test?u_idx=${user.u_idx}">${user.rownum}</a></td>
 				<td>${user.u_id}</td>
 				<td>${user.u_name}</td>
+				<td>
+				<c:set var = "level" scope ="session" value = "${user.u_manage}"/>
+					<c:choose>
+						<c:when test = "${level == 9}">
+							<form action="change-authority.test" method="post">
+								<input type="hidden" name="u_manage" value="${user.u_manage}">
+								<input type="hidden" name="u_idx" value="${user.u_idx}">
+								<input type="submit" value="일반">
+							</form>
+						</c:when>
+						
+						<c:when test = "${level != 9}">
+							<form action="change-authority.test" method="post">
+								<input type="hidden" name="u_manage" value="${user.u_manage}">
+								<input type="hidden" name="u_idx" value="${user.u_idx}">	
+								<input type="submit" value="관리">
+							</form>
+						</c:when>
+					</c:choose>
+				</td>
+				
 			</tr>
+			
 		</c:forEach>
 		
 	</table>	

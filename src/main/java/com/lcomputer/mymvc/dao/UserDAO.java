@@ -32,7 +32,7 @@ public class UserDAO {
 		
 		try {
 			conn = DB_Connection.getConnection();
-			String sql = "insert into user(u_id,u_pw,u_name,u_tel,u_age) values(?,?,?,?,?)";
+			String sql = "insert into user(u_id,u_pw,u_name,u_tel,u_age,u_manage) values(?,?,?,?,?,?)";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, user.getU_id());
@@ -40,6 +40,7 @@ public class UserDAO {
 			pstmt.setString(3, user.getU_name());
 			pstmt.setString(4, user.getU_tel());
 			pstmt.setString(5, user.getU_age());
+			pstmt.setInt(6, User.LEVEL);
 			pstmt.executeUpdate();
 		} catch(Exception e) {
 			System.out.println("SQLException: " + e.getMessage());
@@ -86,7 +87,7 @@ public class UserDAO {
 				user.setU_name(rs.getString("u_name"));
 				user.setU_tel(rs.getString("u_tel"));
 				user.setU_age(rs.getString("u_age"));
-				
+				user.setU_manage(rs.getInt("u_manage"));
 				list.add(user);
 			}
 			
@@ -166,6 +167,7 @@ public class UserDAO {
 				user.setU_name(rs.getString("u_name"));
 				user.setU_tel(rs.getString("u_tel"));
 				user.setU_age(rs.getString("u_age"));
+				user.setU_manage(rs.getInt("u_manage"));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -290,6 +292,8 @@ public class UserDAO {
 				user.setU_pw(rs.getString("u_pw"));
 				user.setU_id(rs.getString("u_id"));
 				user.setU_name(rs.getString("u_name"));
+				user.setU_manage(rs.getInt("u_manage"));
+				
 				
 				
 			}
@@ -307,8 +311,42 @@ public class UserDAO {
 		return user;
 	} //end of loginUser
 	
-	
-	
+	//권한 변경
+	public int changeAuthority(User user) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "update user "
+					+ "set u_manage=? "
+					+ "where u_idx=?";
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			
+			if(user.getU_manage() == 9) {
+				pstmt.setInt(1, User.LEVEL);
+				pstmt.setInt(2, user.getU_idx());
+			}else {
+				pstmt.setInt(1, User.MAN_LEVEL);
+				pstmt.setInt(2, user.getU_idx());
+			}
+			
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+		
+	}
 	
 	
 	

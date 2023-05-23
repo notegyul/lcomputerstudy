@@ -11,7 +11,17 @@ public class User {
 	private String u_age;
 	private String[] user_tel;
 	private int rownum;
+	private int u_manage;
 	
+	public static final int LEVEL = 1;
+	public static final int MAN_LEVEL = 9;
+	
+	public int getU_manage() {
+		return u_manage;
+	}
+	public void setU_manage(int u_manage) {
+		this.u_manage = u_manage;
+	}
 	public int getRownum() {
 		return rownum;
 	}

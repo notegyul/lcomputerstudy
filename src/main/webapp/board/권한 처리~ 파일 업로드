@@ -1,0 +1,7 @@
+session은 현재 로그인한 아이디 정보
+그니까 session에 저장된 u_idx와 게시물(content-detatil)에 저장된 u_idx 비교해서 누구 눈에는 뭐 보이게
+
+content-detatil에서 session.u_idx랑 board.u_idx 비교해야 하는데 how?
+
+
+choose when(or if) 하는데 session.u_idx == board.u_idx면 수정/삭제 키 보이게 

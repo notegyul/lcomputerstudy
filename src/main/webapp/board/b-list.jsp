@@ -74,7 +74,7 @@
 					<%--${pagination.startPage > Pagination.pageUnit } --%>
 					<c:when test="${pagination.prevPage <= pagination.startPage && pagination.prevPage > 0}">
 						<li style="">
-							<a href="title-list.test?page=${pagination.prevPage}">
+							<a href="title-list.test?page=${pagination.prevPage}&type=${pagination.search.type}&keyword=${pagination.search.keyword}">
 								◀
 							</a>
 						</li>
@@ -98,7 +98,7 @@
 				<c:choose>
 					<c:when test="${ pagination.nextPage <= pagination.lastPage }">
 						<li style="">
-							<a href="title-list.test?page=${ pagination.nextPage }">▶</a>
+							<a href="title-list.test?page=${ pagination.nextPage }&type=${pagination.search.type}&keyword=${pagination.search.keyword}">▶</a>
 						</li>
 					</c:when>
 				</c:choose>

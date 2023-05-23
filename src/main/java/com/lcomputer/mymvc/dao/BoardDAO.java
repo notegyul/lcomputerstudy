@@ -224,7 +224,20 @@ public class BoardDAO {
 		
 		
 		if(!(search.getKeyword() == null || search.getKeyword().equals(""))) {
-			whe = "where ? like ? or ? like ? or ? like ?";
+			switch(search.getType()) {
+				case "1":
+					whe = "where b_title like ? ";
+					break;
+				case "2":
+					whe = "where b_title like ? or b_content like ? ";
+					break;
+				case "3":
+					whe = "where b_writer like ? ";
+					break;
+				case "0":
+					whe = "where b_title like ? or b_content like ? or b_writer like ? ";
+					break;
+			}
 		}
 		
 		String sql = "select count(*) count "
@@ -234,22 +247,29 @@ public class BoardDAO {
 		try {
 			conn = DB_Connection.getConnection();
 			pstmt = conn.prepareStatement(sql);	
-			if(!(whe.equals(""))){
-				pstmt.setString(1, "b_title");
-				pstmt.setString(2, "%"+search.getKeyword()+"%");
-				pstmt.setString(3, "b_content");
-				pstmt.setString(4, "%"+search.getKeyword()+"%");
-				pstmt.setString(5, "b_writer");
-				pstmt.setString(6, "%"+search.getKeyword()+"%");
-			}
-					
-			rs = pstmt.executeQuery();
 			
+			if(!(search.getKeyword() == null || search.getKeyword().equals(""))) {
+				switch(search.getType()) {
+					case "1":
+					case "3":
+						pstmt.setString(1, "%"+search.getKeyword()+"%");
+						break;
+					case "2":
+						pstmt.setString(1, "%"+search.getKeyword()+"%");
+						pstmt.setString(2, "%"+search.getKeyword()+"%");
+						break;
+					case "0":
+						pstmt.setString(1, "%"+search.getKeyword()+"%");
+						pstmt.setString(2, "%"+search.getKeyword()+"%");
+						pstmt.setString(3, "%"+search.getKeyword()+"%");
+						break;
+				}
+			}
+			
+			rs = pstmt.executeQuery();
 			while(rs.next()){
 				count = rs.getInt("count");
 			}
-			
-			
 			
 		}catch(Exception e){
 			e.printStackTrace();
