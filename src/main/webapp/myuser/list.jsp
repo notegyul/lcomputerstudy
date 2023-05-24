@@ -58,13 +58,17 @@
 			<th>NO</th>
 			<th>ID</th>
 			<th>이름</th>
-			<th>권한 변경</th>
+			<c:set var = "level" scope ="session" value = "${user.u_manage}"/>
+			<c:if test="${level == 9}">
+				<th>권한 변경</th>
+			</c:if>	
 		</tr>
 		<c:forEach items="${list}" var="user" varStatus="status">
 			<tr>
 				<td><a href="user-detail.test?u_idx=${user.u_idx}">${user.rownum}</a></td>
 				<td>${user.u_id}</td>
 				<td>${user.u_name}</td>
+				
 				<td>
 				<c:set var = "level" scope ="session" value = "${user.u_manage}"/>
 					<c:choose>
@@ -85,6 +89,7 @@
 						</c:when>
 					</c:choose>
 				</td>
+				
 				
 			</tr>
 			

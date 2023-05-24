@@ -17,3 +17,64 @@ choose when(or if) 하는데 session.u_idx == board.u_idx면 수정/삭제 키 �
 			<a href="content-delete.test?b_idx=${board.b_idx}" style="width:70%;font-weight:700;background-color:red;color:#fff;">삭제</a>
 		</td>
 	
+	
+	
+	
+	5.24
+	
+	
+	<td>
+				<c:set var = "level" scope ="session" value = "${user.u_manage}"/>
+					<c:choose>
+						<c:when test = "${level == 9}">
+							<form action="change-authority.test" method="post">
+								<input type="hidden" name="u_manage" value="${user.u_manage}">
+								<input type="hidden" name="u_idx" value="${user.u_idx}">
+								<input type="submit" value="일반">
+							</form>
+						</c:when>
+						
+						<c:when test = "${level != 9}">
+							<form action="change-authority.test" method="post">
+								<input type="hidden" name="u_manage" value="${user.u_manage}">
+								<input type="hidden" name="u_idx" value="${user.u_idx}">	
+								<input type="submit" value="관리">
+							</form>
+						</c:when>
+					</c:choose>
+				</td>
+				
+5.24 관리자(레벨 9 이상)만 회원 리스트 접근 가능
+String checkAdmin(HttpServletRequest req, HttpServletResponse res, String command) {
+		HttpSession session = req.getSession();
+		User user = (User)session.getAttribute("user");
+		
+		String[] authList = {
+				"/user-list.test"
+		};
+		
+		for(String item : authList) {
+			if (item.equals(command)) {
+				if(user ==  null || user.getU_manage() < 9) {
+					command = "/access-denied.test";
+				}
+			}
+		}
+		
+		return command;
+	}
+	
+	
+::파일 업로드::
+1) input tag type="file"
+2) cos jar
+3) DB엔 파일 이름만 올라가게
+4) 사진 파일은 서버에 저장
+
+
+Note: Make sure to adjust the paths and directories in the code to match your project's file system structure.
+
+Remember to configure the necessary form attributes in your JSP file to support file uploads, such as setting the enctype attribute to "multipart/form-data".
+		
+		
+파일업로드 참고 ; https://velog.io/@suyyeon/Servlet-JSP-%ED%8C%8C%EC%9D%BC-%EC%97%85%EB%A1%9C%EB%93%9C-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EB%A7%8C%EB%93%A4%EA%B8%B0		

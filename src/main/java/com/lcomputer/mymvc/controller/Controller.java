@@ -19,12 +19,34 @@ import com.lcomputer.mymvc.vo.Pagination;
 import com.lcomputer.mymvc.vo.Search;
 import com.lcomputer.mymvc.vo.User;
 
+
+
 @WebServlet("*.test")
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse res)throws ServletException, IOException {
 		doPost(req,res);
+	}
+	
+	String checkAdmin(HttpServletRequest req, HttpServletResponse res, String command) {
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute("user");
+		
+		String[] authList = {
+				"/user-list.test"
+		};
+		
+		for(String item : authList) {
+			if(item.equals(command)) {
+				if(user == null || user.getU_manage() != 9) {
+					command = "/only-manage-can-access.test";
+				}
+			}
+		}
+		
+		
+		return command;
 	}
 	
 	String checkSession(HttpServletRequest req, HttpServletResponse res, String command) {
@@ -74,6 +96,7 @@ public class Controller extends HttpServlet {
 		String pw = null;
 		Search search = null;
 		command = checkSession(req,res,command);
+		command = checkAdmin(req,res,command);
 		
 		boolean isRedirected = false;
 		
@@ -218,6 +241,11 @@ public class Controller extends HttpServlet {
 			case "/access-denied.test":
 				
 				view = "myuser/acess-denied";
+				break;
+				
+			case "/only-manage-can-access.test":
+				
+				view = "myuser/only-manage";
 				break;
 				
 				
