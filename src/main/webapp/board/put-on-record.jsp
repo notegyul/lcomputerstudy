@@ -15,10 +15,10 @@
 		<textarea rows="8" cols="20" name="content" placeholder="내용 입력"></textarea>
 		<br/>
 		
-		<p>file1: <input type="file" name="file1"></p>
+		<p>file1: <input type="file" name="file_origin"></p>
 		
 		<br/>
-		<button>등록하기</button>
+		<input type="submit" value="등록하기">
 	</form>
 	
 </body>

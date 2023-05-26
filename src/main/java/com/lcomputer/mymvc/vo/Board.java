@@ -13,11 +13,27 @@ public class Board {
 	private int b_group;
 	private int b_order;
 	private int b_depth;
+
 	private String b_comment;
 	private ArrayList<Comment> comments;
 	
 	private int rownum;
 	
+	private String file_origin;
+	private String file_serv;
+	
+	public String getFile_origin() {
+		return file_origin;
+	}
+	public void setFile_origin(String file_origin) {
+		this.file_origin = file_origin;
+	}
+	public String getFile_serv() {
+		return file_serv;
+	}
+	public void setFile_serv(String file_serv) {
+		this.file_serv = file_serv;
+	}
 	public int getRownum() {
 		return rownum;
 	}

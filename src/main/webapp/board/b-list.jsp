@@ -57,11 +57,13 @@
 			<tr>
 				<th>제목</th>
 				<th>작성일</th>
+				<th>조회수</th>
 			</tr>
 			<c:forEach items="${bList}" var="contents">
 				<tr>
 					<td><a href="content-detail.test?b_idx=${contents.b_idx}&u_idx=${contents.u_idx}">${contents.b_title}</a></td>
 					<td>${contents.b_date}</td>
+					<td>${contents.b_count}</td>
 				</tr>
 			</c:forEach>
 			

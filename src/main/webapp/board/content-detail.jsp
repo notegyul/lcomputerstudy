@@ -32,12 +32,45 @@
 
 </style>
 <body>
-	<h1>게시글 상세</h1>
-	<h4>제목: ${board.b_title}</h4>
-	<h4>내용: ${board.b_content}</h4>
-	<h4>작성자: ${board.b_writer}</h4>
-	<h4>작성일: ${board.b_date}</h4>
+
+	<h2>게시글 상세</h2>
+	<table border="1" >
+		<colgroup>
+			<col width="15%" /> <col width="35%" />
+			<col width="15%" /> <col width="*" />
+
+		</colgroup>
+		
+		<tr>
+			<td>번호</td><td>${board.b_idx}</td>
+			<td>작성자</td><td>${board.b_writer}</td>
+		</tr>
+		<tr>
+			<td>조회수</td><td>${board.b_count}</td>
+			<td>작성일</td><td>${board.b_date}</td>
+		</tr>
+		<tr>
+			<td>제목</td><td>${board.b_title}</td>
+		</tr>
+		<tr>
+			<td >내용</td>
+			<td colspan="3" height="100" >${board.b_content}</td>
+		</tr>
+		
+		<tr>
+			<td>첨부파일</td>
+			<td>
+				<c:if test="${not empty board.file_origin}">
+				${board.file_origin}
+				<a href="download.test?file_origin=${board.file_origin}&file_serv=${board.file_serv}&b_idx=${board.b_idx}">[다운로드]</a>
+				</c:if>
+			</td>
+		</tr>
 	
+	</table>
+	<br/>
+	<br/>
+	<br/>
 	<table>
 		<tr style="heigth:50px;">
 			<c:set var="auth" value="${board.u_idx}"/>
@@ -75,6 +108,8 @@
 		</tr>
 		
 	</table>
+	<br/>
+	<br/>
 	<br/>
 	
 	<form action="comment.test" name="com" method="post">

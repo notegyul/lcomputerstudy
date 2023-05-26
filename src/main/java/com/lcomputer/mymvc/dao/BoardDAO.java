@@ -28,7 +28,7 @@ public class BoardDAO {
 	public void regist(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String sql = "insert into board(b_title,b_content,b_date,b_writer,b_count,u_idx, b_group, b_order, b_depth) values(?,?,now(),?,?,?,1,1,0)";
+		String sql = "insert into board(b_title,b_content,b_date,b_writer,b_count,u_idx, b_group, b_order, b_depth, file_origin, file_serv) values(?,?,now(),?,?,?,1,1,0,?,?)";
 		
 		try {
 			conn = DB_Connection.getConnection();
@@ -39,6 +39,8 @@ public class BoardDAO {
 			pstmt.setString(3, board.getB_writer());
 			pstmt.setInt(4,board.getB_count());
 			pstmt.setInt(5,board.getU_idx());
+			pstmt.setString(6, board.getFile_origin());		//원본파일명 
+			pstmt.setString(7, board.getFile_serv());			//서버저장파일명  
 			
 			pstmt.executeUpdate();
 			pstmt.close();
@@ -309,6 +311,8 @@ public class BoardDAO {
 				board.setB_date(rs.getString("b_date"));
 				board.setB_writer(rs.getString("b_writer"));
 				board.setB_count(rs.getInt("b_count"));
+				board.setFile_origin(rs.getString("file_origin"));
+				board.setFile_serv(rs.getString("file_serv"));
 				
 				
 				
@@ -331,6 +335,36 @@ public class BoardDAO {
 		
 		return board;
 	}
+	
+	//게시글 조회수(hits)
+	public int plusHits(int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		String sql = "update board set b_count = b_count+1"
+						   + " where b_idx=?";
+		
+		try {
+			conn = DB_Connection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
 	
 	public int edit(Board board) {
 		Connection conn = null;

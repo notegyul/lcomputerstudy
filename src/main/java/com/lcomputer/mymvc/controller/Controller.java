@@ -1,7 +1,10 @@
 package com.lcomputer.mymvc.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,9 +18,12 @@ import com.lcomputer.mymvc.service.BoardService;
 import com.lcomputer.mymvc.service.UserService;
 import com.lcomputer.mymvc.vo.Board;
 import com.lcomputer.mymvc.vo.Comment;
+import com.lcomputer.mymvc.vo.FileUtil;
+import com.lcomputer.mymvc.vo.JSFunction;
 import com.lcomputer.mymvc.vo.Pagination;
 import com.lcomputer.mymvc.vo.Search;
 import com.lcomputer.mymvc.vo.User;
+import com.oreilly.servlet.MultipartRequest;
 
 
 
@@ -95,6 +101,7 @@ public class Controller extends HttpServlet {
 		HttpSession session = null;
 		String pw = null;
 		Search search = null;
+		String saveDirectory = null;
 		command = checkSession(req,res,command);
 		command = checkAdmin(req,res,command);
 		
@@ -270,22 +277,48 @@ public class Controller extends HttpServlet {
 				session = req.getSession();
 				user = (User)session.getAttribute("user");
 				
+				
+				saveDirectory = req.getServletContext().getRealPath("/img");
+				int maxPostSize = FileUtil.MAX_POST_SIZE; //1024*1000
+				
+				MultipartRequest mr = FileUtil.uploadFile(req, saveDirectory, maxPostSize);
+				
+				if(mr == null) {
+					JSFunction.alertLoacation(res, "첨부 파일 제한 용량 초과", "register.test");
+					
+					return;
+					
+				}
+				
+				
 				Board board = new Board();
 				
-				board.setB_title(req.getParameter("title"));
-				board.setB_content(req.getParameter("content"));
-				//board.setB_date("20230403");
+				board.setB_title(mr.getParameter("title"));
+				board.setB_content(mr.getParameter("content"));
 				board.setB_writer(user.getU_name());
-				board.setB_count(1);
+				board.setB_count(0);
 				board.setU_idx(user.getU_idx());
 				
-				
-				
+				String fileName = mr.getFilesystemName("file_origin");
+				if(fileName != null) {
+					String now = new SimpleDateFormat("yyyyMMdd_HmsS").format(new Date());
+					String ext = fileName.substring(fileName.lastIndexOf("."));
+					String newFileName = now + ext;
+					
+					File oldFile = new File(saveDirectory + File.separator + fileName);
+					File newFile = new File(saveDirectory + File.separator + newFileName);
+					oldFile.renameTo(newFile);
+					
+					board.setFile_origin(fileName);
+					board.setFile_serv(newFileName);
+				}
 				
 				BoardService boardService = BoardService.getInstance();
 				boardService.regist(board);
 				
-				view = "board/record-complete";
+				view = "title-list.test";
+				
+				isRedirected = true;
 				break;
 				
 			case "/title-list.test":
@@ -367,8 +400,13 @@ public class Controller extends HttpServlet {
 			case "/content-detail.test":
 				boardService = BoardService.getInstance();
 				idx = req.getParameter("b_idx");
+				
+				
+				boardService.plusHits(Integer.parseInt(idx));
 				board = boardService.getBoard(Integer.parseInt(idx));
 				board.setU_idx(Integer.parseInt(req.getParameter("u_idx")));
+				
+				
 				
 				view = "board/content-detail";
 				req.setAttribute("board", board);
@@ -563,6 +601,17 @@ public class Controller extends HttpServlet {
 				req.setAttribute("comment", comment);
 				view = "board/test";
 				break;
+				
+				case "/download.test":
+					
+					String file_origin = req.getParameter("file_origin");
+					String file_serv = req.getParameter("file_serv");
+				
+					FileUtil.download(req, res, "/img", file_serv, file_origin);
+					
+					
+					break;
+				
 		}
 		
 		if (isRedirected) {

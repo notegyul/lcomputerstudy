@@ -54,21 +54,20 @@
 	<table>
 		<tr>
 			<td colspan="3">전체 회원 수: ${pagination.count}</td>
+			<td colspan="2">회원 레벨 정보</td>
 		<tr>
 			<th>NO</th>
 			<th>ID</th>
 			<th>이름</th>
-			<c:set var = "level" scope ="session" value = "${user.u_manage}"/>
-			<c:if test="${level == 9}">
-				<th>권한 변경</th>
-			</c:if>	
+			<th>LEVEL</th>
+			<th>권한 변경</th>
 		</tr>
 		<c:forEach items="${list}" var="user" varStatus="status">
 			<tr>
 				<td><a href="user-detail.test?u_idx=${user.u_idx}">${user.rownum}</a></td>
 				<td>${user.u_id}</td>
 				<td>${user.u_name}</td>
-				
+				<td>${user.u_manage}</td>
 				<td>
 				<c:set var = "level" scope ="session" value = "${user.u_manage}"/>
 					<c:choose>

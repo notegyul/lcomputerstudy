@@ -70,4 +70,8 @@ public class BoardService {
 	public int reComment(Comment comment) {
 		return dao.reComment(comment);
 	}
+	
+	public int plusHits(int b_idx) {
+		return dao.plusHits(b_idx);
+	}
 }
