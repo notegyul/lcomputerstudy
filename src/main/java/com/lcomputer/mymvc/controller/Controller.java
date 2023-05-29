@@ -602,20 +602,24 @@ public class Controller extends HttpServlet {
 				view = "board/test";
 				break;
 				
-				case "/download.test":
-					
-					String file_origin = req.getParameter("file_origin");
-					String file_serv = req.getParameter("file_serv");
+			case "/download.test":
 				
-					FileUtil.download(req, res, "/img", file_serv, file_origin);
-					
-					
-					break;
+				String file_origin = req.getParameter("file_origin");
+				String file_serv = req.getParameter("file_serv");
+			
+				FileUtil.download(req, res, "/img", file_serv, file_origin);
+				
+				
+				view = "content-detail.test";
+				isRedirected = true;
+				
+				break;
 				
 		}
 		
 		if (isRedirected) {
 			res.sendRedirect(view);
+			
 		} else {
 			RequestDispatcher rd = req.getRequestDispatcher(view+".jsp");
 			rd.forward(req, res);

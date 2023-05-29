@@ -66,8 +66,18 @@
 				</c:if>
 			</td>
 		</tr>
+		
+		
+		
+		
 	
 	</table>
+	
+	<div>
+		<img src="http://localhost:8080/lcomputerstudy/img/${board.file_serv}"/>
+	</div>
+		
+	
 	<br/>
 	<br/>
 	<br/>
